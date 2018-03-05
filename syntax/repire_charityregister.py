@@ -65,7 +65,7 @@ ilink = 'http://www.charitiesregulatoryauthority.ie' # Create initial part of th
 flink = ilink + plink # Build full link to Register
 cr_url = flink.replace(" ", "%20")
 print(cr_url)
-print(type(cr_url)) # Despite being a string, the replace function is not working.
+print(type(cr_url))
 
 
 r = requests.get(cr_url, allow_redirects=True)
