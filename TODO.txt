@@ -1,0 +1,13 @@
+Main Task:
+	- restructure project around CR Register that is then merged with Benefacts data.gov Register, plus data from the API. [DONE]
+	- Move the data folders out of the Github repo. [DONE]
+	- Construct register url using Beautiful Soup. [DONE]
+	- Data cleaning in Stata: panel format of annual returns; merging time-invariant charity characteristics with annual returns.
+
+Remaining Tasks:
+	- See Patricia's email: I may need to take a monthly snapshot of https://data.gov.ie/dataset/benefacts/resource/4f2e67d0-d389-42f7-8c52-3c6b27a21636 for the Benefacts Charity Register, and link it with API data. [DONE]
+	- Consult the Benefacts Knowledge Base to understand how the data are collected.
+	- Recreate Alasdair's FundReg Twitter project.
+	- Download data to Dropbox or some other network (or pay for AWS).
+	- Download metadata associated with API request.
+	- Create a folder in the dataclean folder. [DONE]
