@@ -4,16 +4,24 @@ from time import sleep
 import os
 import os.path
 from downloaddate_function import downloaddate
+from stata_ditty_function import stata_ditty
 import subprocess
 
+# Launch a little ditty
+print('                       ')
+stata_ditty()
+
+
+# Get today's date
 ddate = downloaddate()	
-print('Today is the : ' + ddate)
+print('The date is ' + ddate)
 
 # Create folders for the working and clean data #
 
 cleandata = 'C:/Users/mcdonndz-local/Desktop/data/repire_charity_data/data_clean/'
 workdata = 'C:/Users/mcdonndz-local/Desktop/data/repire_charity_data/data_working/'
-
+'''
+# Create folders to store the clean and working .dta files
 try:
 	os.mkdir(cleandata+ddate)
 	os.mkdir(workdata+ddate)
@@ -21,21 +29,25 @@ except:
 	print('Folder already exists')
 
 
-'''	
 # Run python scripts in order: #
 
 import repire_charityregister
 print('Finished processing repire_charityregister.py')
+print('                                             ')
+print('---------------------------------------------')
+print('                                             ')
 sleep(10)
 
 import benefacts_volcodemembers
 print('Finished processing benefacts_volcodemembers.py')
+print('                                             ')
+print('---------------------------------------------')
+print('                                             ')
 sleep(10)
 
 import benefacts_taxefficientgifts
 sleep(10)
 print('Finished processing benefacts_taxefficientgifts.py')
-
 print('                                                  ')
 print('                                                  ')
 print('                                                  ')
@@ -45,8 +57,8 @@ print('                                                  ')
 print('                                                  ')
 print('                                                  ')
 print('                                                  ')
-
 '''
+
 # Run Stata syntax #
 
 # Define a function for executing do files
@@ -61,7 +73,7 @@ def dostata(dofile, *params):
 
 try:
 	dostata('C:/Users/mcdonndz-local/Desktop/github/repire_charity_data/syntax/stata/repire_datacleaning.do', ddate)
-	#dostata('C:/Users/mcdonndz-local/Desktop/github/repire_charity_data/syntax/stata/repire_dataanalysis.do', ddate)
+	dostata('C:/Users/mcdonndz-local/Desktop/github/repire_charity_data/syntax/stata/repire_dataanalysis.do', ddate)
 	print('-------------------------------------------------------------------------------------------------------------')
 	print('                                                                                                             ')
 	print('                                                                                                             ')
@@ -69,4 +81,4 @@ try:
 	print('                                                                                                             ')
 	print('                                                                                                             ')
 except:
-	print('Unsuccessful in launching Stata')
+	print('Stata launch unsuccesful')

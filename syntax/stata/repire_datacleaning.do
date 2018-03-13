@@ -18,12 +18,15 @@
 /* Define paths to the data and syntax */
 
 global projpath "C:\Users\mcdonndz-local\Desktop\github\repire_charity_data"
+global datapath "C:\Users\mcdonndz-local\Desktop\data\repire_charity_data"
+
 global dofiles "$projpath\syntax\"
-global rawdata "$projpath\data\data_raw\"
-global cleandata "$projpath\data\data_clean\" 
-global workingdata "$projpath\data\data_working\" 
 global figures "$projpath\figures\"
 global findings "$projpath\findings\"
+
+global rawdata "$datapath\data_raw\"
+global cleandata "$datapath\data_clean\" 
+global workingdata "$datapath\data_working\" 
 
 di "$projpath"
 di "$dofiles"

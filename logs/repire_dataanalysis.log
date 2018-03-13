@@ -1,0 +1,407 @@
+
+  ___  ____  ____  ____  ____ (R)
+ /__    /   ____/   /   ____/
+___/   /   /___/   /   /___/   15.1   Copyright 1985-2017 StataCorp LLC
+  Statistics/Data Analysis            StataCorp
+                                      4905 Lakeway Drive
+     Special Edition                  College Station, Texas 77845 USA
+                                      800-STATA-PC        http://www.stata.com
+                                      979-696-4600        stata@stata.com
+                                      979-696-4601 (fax)
+
+46-user Stata network perpetual license:
+       Serial number:  401506202372
+         Licensed to:  Diarmuid McDonnell
+                       University of Birmingham
+
+Notes:
+      1.  Stata is running in batch mode.
+      2.  Unicode is supported; see help unicode_advice.
+      3.  Maximum number of variables is set to 5000; see help set_maxvar.
+
+
+running C:\Program Files (x86)\Stata15\profile.do ...
+Running Diarmuid McDonnell's Stata Profile 1 
+19:29:30 12 Mar 2018
+C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\logs
+  <dir>   3/12/18 19:18  .                 
+  <dir>   3/12/18 19:18  ..                
+   0.0k   3/12/18 19:29  repire_dataanalysis.log
+8315.6k   3/12/18 19:29  repire_datacleaning.log
+--------------------------------------------------------------------------------
+    Interface settings
+      set dockable         on
+      set dockingguides    on
+      set floatwindows     off
+      set locksplitters    off
+      set pinnable         on
+      set doublebuffer     on
+      --------------------------------------------------------------------------
+      set linegap          1          pixels
+      set scrollbufsize    2048000    characters
+      set fastscroll       on
+      set reventries       5000       lines
+      --------------------------------------------------------------------------
+      set maxdb            50         dialog boxes
+
+. do C:/Users/mcdonndz-local/Desktop/github/repire_charity_data/syntax/stata/rep
+> ire_dataanalysis.do 20180312 
+
+. // File: benefacts_das.do
+. // Creator: Diarmuid McDonnell
+. // Created: 27/02/2018
+. // Updated: recorded in Github file history
+. // Repository: https://github.com/DiarmuidM/benefacts_nonprofit_data_ireland
+. 
+. ******* Republic of Ireland Charity Data - Data Analysis *******
+. 
+. /* 
+>         This do file performs the following tasks:
+>                 - opens clean dataset from the most recent download from Benef
+> acts
+>                 - performs some basic analyses
+>                 - saves these analyses as graphs
+>                 
+>         The analyses should focus on:
+>                 - number and types of charities operating in Ireland
+>                 - latest financial profile of organisations
+>                 - summary statistics for longitudinal data
+> */
+. 
+. /* Define paths to the data and syntax */
+. 
+. global projpath "C:\Users\mcdonndz-local\Desktop\github\repire_charity_data"
+
+. global datapath "C:\Users\mcdonndz-local\Desktop\data\repire_charity_data"
+
+. 
+. global dofiles "$projpath\syntax\"
+
+. global figures "$projpath\figures\"
+
+. global findings "$projpath\findings\"
+
+. 
+. global rawdata "$datapath\data_raw\"
+
+. global cleandata "$datapath\data_clean\" 
+
+. global workingdata "$datapath\data_working\" 
+
+. 
+. di "$projpath"
+C:\Users\mcdonndz-local\Desktop\github\repire_charity_data
+
+. di "$dofiles"
+C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\syntax\
+
+. di "$rawdata"
+C:\Users\mcdonndz-local\Desktop\data\repire_charity_data\data_raw\
+
+. di "$cleandata"
+C:\Users\mcdonndz-local\Desktop\data\repire_charity_data\data_clean\
+
+. di "$workingdata"
+C:\Users\mcdonndz-local\Desktop\data\repire_charity_data\data_working\
+
+. di "$figures"
+C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\figures\
+
+. di "$findings"
+C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\findings\
+
+. 
+. 
+. // Take download date from 1st argument of 'dostata' function in repire_master
+> .py, and use it to name files.
+. 
+. global ddate `1'
+
+. di "$ddate"
+20180312
+
+. 
+. 
+. /* Open the clean datasets */
+. 
+. // Registered charities
+. 
+. use $cleandata\$ddate\registeredcharities_$ddate.dta, clear
+
+. desc, f
+
+Contains data from C:\Users\mcdonndz-local\Desktop\data\repire_charity_data\data
+> _clean\20180312\registeredcharities_20180312.dta
+  obs:         9,914                          
+ vars:            47                          12 Mar 2018 19:29
+ size:    32,931,963                          
+--------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+--------------------------------------------------------------------------------
+charityid       long    %10.0g                Unique id of charity - assigned by
+                                                Charities Regulator
+name            str97   %97s                  Name of charity
+alias           str837  %837s                 Alias
+principaladdress
+                str154  %154s                 Principal Address
+legalform       str206  %206s                 Legal form of charity e.g.
+                                                Company, Trust
+chynum          double  %10.0g                Revenue (Charities Unit) number
+cronum          str73   %73s                  Companies Registration Office
+                                                number
+countryestablished
+                str223  %223s                 Country Established
+CharitablePurpose
+                str865  %865s                 Charitable Purpose
+charitableobjects
+                strL    %9s                   Charitable Objects
+dupname         byte    %12.0g                Shares name with another charity
+dupchy          int     %12.0g                Shares CHY number with another
+                                                charity
+dupcro          int     %12.0g                Shares CRO number with another
+                                                charity
+charitystatus   byte    %25.0g     charitystatus_lab
+                                              Status
+beneregid       str7    %9s                   Register id of charity - assigned
+                                                by Benefacts
+registeredname  str116  %116s                 Name of charity
+subsectorcode   float   %9.0g                 Subsector Code
+subsectorname   str45   %45s                  Subsector Name
+registeredaddress
+                str126  %126s                 Registered Address
+county          str9    %9s                   County
+postcode        str8    %9s                   Eircode
+b_cronum        long    %12.0g                Companies Registration Office
+                                                number - Benefacts dataset
+b_chynum        int     %8.0g                 Revenue (Charities Unit) number -
+                                                Benefacts dataset
+ahbstatus       str10   %10s                  AHB
+desstatus       str6    %9s                   DES
+rfsnum          str6    %9s                   RFS
+benefactsurl    str70   %70s                   BenefactsUrl
+dupb_name       byte    %12.0g                Shares name with another charity -
+                                                Benefacts dataset
+dupb_cro        int     %12.0g                Shares CRO number with another
+                                                charity - Benefacts dataset
+dupb_cra        byte    %12.0g                Shares CRA number with another
+                                                charity - Benefacts dataset
+dupb_chy        int     %12.0g                Shares CHY number with another
+                                                charity - Benefacts dataset
+dupb_des        int     %12.0g                Shares DES number with another
+                                                charity - Benefacts dataset
+dupb_rfs        int     %12.0g                Shares RFS number with another
+                                                charity - Benefacts dataset
+beneid          str36   %36s                  Unique id of charity - assigned by
+                                                Benefacts
+dupbeneid       byte    %12.0g                
+croreg          byte    %9.0g                 
+chyreg          byte    %9.0g                 
+ahbreg          byte    %9.0g                 
+desreg          byte    %9.0g                 
+rfsreg          byte    %9.0g                 
+taxgifts        byte    %9.0g                 Eligible for tax efficient gifts
+taxmerge        byte    %23.0g     _merge     
+governancecode  byte    %9.0g                 Complies with GOVERNANCECODE
+govmerge        byte    %23.0g     _merge     
+ictr            byte    %9.0g                 Complies with ICTR
+ictrmerge       byte    %23.0g     _merge     
+benemerge       byte    %23.0g     _merge     
+--------------------------------------------------------------------------------
+Sorted by: 
+
+. count
+  9,914
+
+. return list
+
+scalars:
+                  r(N) =  9914
+
+. di r(N) " registered charities on $ddate"
+9914 registered charities on 20180312
+
+. 
+.         // Summary statistics
+. 
+.         tab1 taxgifts governancecode ictr
+
+-> tabulation of taxgifts  
+
+   Eligible |
+    for tax |
+  efficient |
+      gifts |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      5,142       65.52       65.52
+          1 |      2,706       34.48      100.00
+------------+-----------------------------------
+      Total |      7,848      100.00
+
+-> tabulation of governancecode  
+
+   Complies |
+       with |
+GOVERNANCEC |
+        ODE |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      7,591       96.73       96.73
+          1 |        257        3.27      100.00
+------------+-----------------------------------
+      Total |      7,848      100.00
+
+-> tabulation of ictr  
+
+   Complies |
+  with ICTR |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      7,507       95.65       95.65
+          1 |        341        4.35      100.00
+------------+-----------------------------------
+      Total |      7,848      100.00
+
+.         tab governancecode ictr, nofreq col all
+
+  Complies |
+      with |
+GOVERNANCE |  Complies with ICTR
+      CODE |         0          1 |     Total
+-----------+----------------------+----------
+         0 |     98.02      68.33 |     96.73 
+         1 |      1.98      31.67 |      3.27 
+-----------+----------------------+----------
+     Total |    100.00     100.00 |    100.00 
+
+          Pearson chi2(1) = 907.5545   Pr = 0.000
+ likelihood-ratio chi2(1) = 373.9280   Pr = 0.000
+               Cramér's V =   0.3401
+                    gamma =   0.9163  ASE = 0.011
+          Kendall's tau-b =   0.3401  ASE = 0.026
+
+.         return list
+
+scalars:
+                  r(N) =  7848
+                  r(r) =  2
+                  r(c) =  2
+               r(chi2) =  907.5544582723387
+                  r(p) =  2.2365564567e-199
+            r(chi2_lr) =  373.9280308717171
+               r(p_lr) =  2.61187301158e-83
+           r(CramersV) =  .3400610176165267
+              r(gamma) =  .9162821429475717
+            r(ase_gam) =  .0114563383530276
+               r(taub) =  .3400610176165267
+           r(ase_taub) =  .0257731571496048
+
+.         di "The association between governancecode and ictr is " r(CramersV) "
+> ***"
+The association between governancecode and ictr is .34006102***
+
+. 
+.         catplot governancecode ictr, percent(ictr) asyvars ///
+>                 ylab(, nogrid labsize(small)) scheme(s1color) ///
+>                 var1opts(gap(*.5)) ///
+>                 blabel(bar, position(inside) format(%9.0f) color(white)) ///
+>                 legend(size(small)) ///
+>                 ytitle("% of charities") ///
+>                 title("Distribution of code compliance") ///
+>                 note("Source: Benefacts Nonprofit Data API (31/12/2016); n=786
+> 7. Note: Cramers V=.3401*** Produced: $S_DATE", size(vsmall))
+
+.                 /*
+>                         I need to think about the best way to present changes 
+> in the distribution of icnpo over time.
+>                 */
+. 
+.         graph save $figures\benefacts_compliancecodes_$ddate.gph, replace
+(note: file C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\figures\b
+> enefacts_compliancecodes_20180312.gph not found)
+(file C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\figures\benefac
+> ts_compliancecodes_20180312.gph saved)
+
+.         graph export $figures\benefacts_compliancecodes_$ddate.png, width(4096
+> ) replace
+(note: file C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\figures\\
+> benefacts_compliancecodes_20180312.png not found)
+(file C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\figures\\benefa
+> cts_compliancecodes_20180312.png written in PNG format)
+
+. 
+. 
+. // Annual Returns
+. 
+. use $cleandata\$ddate\annualreturns_$ddate.dta, clear   
+
+. desc, f
+
+Contains data from C:\Users\mcdonndz-local\Desktop\data\repire_charity_data\data
+> _clean\20180312\annualreturns_20180312.dta
+  obs:        13,809                          
+ vars:            16                          12 Mar 2018 19:29
+ size:    38,719,683                          
+--------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+--------------------------------------------------------------------------------
+charityid       long    %10.0g                Registered Charity Number
+name            str106  %106s                 Charity Name
+bdate           int     %td..                 Report Start Date
+edate           int     %td..                 Report End Date
+activities      str632  %632s                 Activities
+activities_des  strL    %9s                   Activities Description
+beneficiaries   str1475 %1475s                Beneficiaries
+inc             double  %10.0g                Financial Gross Income
+exp             double  %10.0g                Financial Total Expenditure
+charitysize     long    %8.0g      charitysize_lab
+                                              Report Size
+lninc           float   %9.0g                 
+lnexp           float   %9.0g                 
+volunteers      long    %17.0g     volunteers_lab
+                                              Volunteer Count
+byear           float   %9.0g                 
+eyear           float   %9.0g                 
+returnyear      float   %9.0g                 
+--------------------------------------------------------------------------------
+Sorted by: charityid  edate
+
+. count
+  13,809
+
+. return list
+
+scalars:
+                  r(N) =  13809
+
+. di r(N) " annual returns on $ddate"
+13809 annual returns on 20180312
+
+.         
+.         // Summary statistics
+.         
+.         xtsum inc
+
+Variable         |      Mean   Std. Dev.       Min        Max |    Observations
+-----------------+--------------------------------------------+----------------
+inc      overall |   4355187   1.69e+08          0   1.43e+10 |     N =   13804
+         between |             1.26e+08          0   9.30e+09 |     n =    5573
+         within  |             9.69e+07  -9.28e+09   4.98e+09 | T-bar = 2.47694
+
+.         xtsum exp
+
+Variable         |      Mean   Std. Dev.       Min        Max |    Observations
+-----------------+--------------------------------------------+----------------
+exp      overall |   4369642   1.69e+08          0   1.43e+10 |     N =   13801
+         between |             1.26e+08          0   9.29e+09 |     n =    5573
+         within  |             9.68e+07  -9.27e+09   5.00e+09 | T-bar =  2.4764
+
+.         
+.         twoway (lfitci inc exp) (scatter inc exp) , ///
+>                 title("Relationship between income and expenditure") ///
+>                 subtitle("Line of best fit and 95% CI") ///
+>                 scheme(s1color)
+
+.         
+. exit, STATA clear
+
+end of do-file

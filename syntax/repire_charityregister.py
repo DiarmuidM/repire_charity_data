@@ -72,6 +72,17 @@ r = requests.get(cr_url, allow_redirects=True)
 print(r.status_code, r.headers) # I want to take the date information and use it to name the file and folder
 #print(r.content)
 
+# I need to capture the last modified information so I can name the files/decide when to download etc.
+'''
+metadata = r.headers
+print(type(metadata))
+lastmod = metadata['Last-Modified']
+print(lastmod)
+print(len(lastmod))
+udate = lastmod[5:16].replace(' ', '')
+print(udate)
+'''
+
 # Write the r.content to a file in the newly created folder #
 crreg = datapath + ddate + '/' + 'cr_charityregister_' + ddate + '.xlsx'
 print(crreg)

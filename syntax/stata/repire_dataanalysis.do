@@ -4,25 +4,32 @@
 // Updated: recorded in Github file history
 // Repository: https://github.com/DiarmuidM/benefacts_nonprofit_data_ireland
 
-******* Benefacts Charity Data - Data Analysis *******
+******* Republic of Ireland Charity Data - Data Analysis *******
 
 /* 
 	This do file performs the following tasks:
 		- opens clean dataset from the most recent download from Benefacts
 		- performs some basic analyses
 		- saves these analyses as graphs
+		
+	The analyses should focus on:
+		- number and types of charities operating in Ireland
+		- latest financial profile of organisations
+		- summary statistics for longitudinal data
 */
-
 
 /* Define paths to the data and syntax */
 
-global projpath "C:\Users\mcdonndz-local\Desktop\github\benefacts_nonprofit_data_ireland\"
+global projpath "C:\Users\mcdonndz-local\Desktop\github\repire_charity_data"
+global datapath "C:\Users\mcdonndz-local\Desktop\data\repire_charity_data"
+
 global dofiles "$projpath\syntax\"
-global rawdata "$projpath\data\data_raw\"
-global cleandata "$projpath\data\data_clean\" 
-global workingdata "$projpath\data\data_working\" 
 global figures "$projpath\figures\"
 global findings "$projpath\findings\"
+
+global rawdata "$datapath\data_raw\"
+global cleandata "$datapath\data_clean\" 
+global workingdata "$datapath\data_working\" 
 
 di "$projpath"
 di "$dofiles"
@@ -32,6 +39,9 @@ di "$workingdata"
 di "$figures"
 di "$findings"
 
+
+// Take download date from 1st argument of 'dostata' function in repire_master.py, and use it to name files.
+
 global ddate `1'
 di "$ddate"
 
@@ -40,13 +50,13 @@ di "$ddate"
 
 // Registered charities
 
-use $cleandata\benefacts_registeredcharities_$ddate.dta, clear
+use $cleandata\$ddate\registeredcharities_$ddate.dta, clear
 desc, f
 count
 return list
 di r(N) " registered charities on $ddate"
 
-	// Summary statistics and graphs
+	// Summary statistics
 
 	tab1 taxgifts governancecode ictr
 	tab governancecode ictr, nofreq col all
@@ -68,4 +78,24 @@ di r(N) " registered charities on $ddate"
 	graph save $figures\benefacts_compliancecodes_$ddate.gph, replace
 	graph export $figures\benefacts_compliancecodes_$ddate.png, width(4096) replace
 
+
+// Annual Returns
+
+use $cleandata\$ddate\annualreturns_$ddate.dta, clear	
+desc, f
+count
+return list
+di r(N) " annual returns on $ddate"
+	
+	// Summary statistics
+	
+	xtsum inc
+	xtsum exp
+	
+	twoway (lfitci inc exp) (scatter inc exp) , ///
+		title("Relationship between income and expenditure") ///
+		subtitle("Line of best fit and 95% CI") ///
+		scheme(s1color)
+	
 exit, STATA clear
+
