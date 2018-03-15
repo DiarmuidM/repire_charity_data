@@ -20,7 +20,7 @@ print('The date is ' + ddate)
 
 cleandata = 'C:/Users/mcdonndz-local/Desktop/data/repire_charity_data/data_clean/'
 workdata = 'C:/Users/mcdonndz-local/Desktop/data/repire_charity_data/data_working/'
-'''
+
 # Create folders to store the clean and working .dta files
 try:
 	os.mkdir(cleandata+ddate)
@@ -57,7 +57,7 @@ print('                                                  ')
 print('                                                  ')
 print('                                                  ')
 print('                                                  ')
-'''
+
 
 # Run Stata syntax #
 

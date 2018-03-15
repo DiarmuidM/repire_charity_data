@@ -56,27 +56,36 @@ count
 return list
 di r(N) " registered charities on $ddate"
 
-	// Summary statistics
-
-	tab1 taxgifts governancecode ictr
-	tab governancecode ictr, nofreq col all
-	return list
-	di "The association between governancecode and ictr is " r(CramersV) "***"
-
-	catplot governancecode ictr, percent(ictr) asyvars ///
-		ylab(, nogrid labsize(small)) scheme(s1color) ///
-		var1opts(gap(*.5)) ///
-		blabel(bar, position(inside) format(%9.0f) color(white)) ///
-		legend(size(small)) ///
-		ytitle("% of charities") ///
-		title("Distribution of code compliance") ///
-		note("Source: Benefacts Nonprofit Data API (31/12/2016); n=7867. Note: Cramers V=.3401*** Produced: $S_DATE", size(vsmall))
-		/*
-			I need to think about the best way to present changes in the distribution of icnpo over time.
-		*/
-
-	graph save $figures\benefacts_compliancecodes_$ddate.gph, replace
-	graph export $figures\benefacts_compliancecodes_$ddate.png, width(4096) replace
+	preserve
+	
+		// Non-financial characteristics
+		
+		tab1 charitystatus legalform subsectorname
+		mrtab croreg chyreg ahbreg desreg rfsreg, by(charitystatus) column nofreq
+		
+		gen freq=1
+		collapse (count)freq, by(county)
+		desc, f
+		count
+		list
+		sum freq, detail
+		table county if county!="" , c(sum freq)			
+		
+		drop if county==""
+		
+		graph hbar freq, over(county, sort(freq) descending label(labsize(vsmall))) ///
+			legend(off)  ///
+			ytitle("No. of Charities") ///
+			title("Geographical Distribution of Charities", span)  ///
+			subtitle("by counties of the Rep. of Ireland", span)  ///
+			note("Source:  CR, Benefacts CR. Produced: $S_DATE") ///
+			blabel(bar, position(outside) format(%9.0f) color(black) size(vsmall)) ///
+			scheme(s1mono) ysize(5) ylabel(, nogrid) name(geod, replace)
+			
+		graph save $figures\repire_geogdistribution_$ddate.gph, replace
+		graph export $figures\repire_geogdistribution_$ddate.png, replace width(4096)
+				
+	restore
 
 
 // Annual Returns
@@ -89,13 +98,21 @@ di r(N) " annual returns on $ddate"
 	
 	// Summary statistics
 	
+	tab charitysize volunteers if volunteers < 7, nofreq col all
+	
 	xtsum inc
 	xtsum exp
+	xtsum lninc
+	xtsum lnexp
+	sum inc exp lninc lnexp, detail
 	
-	twoway (lfitci inc exp) (scatter inc exp) , ///
+	twoway(scatter inc exp if inc<500000 & exp<500000) (lfitci inc exp if inc<500000 & exp<500000)  , ///
 		title("Relationship between income and expenditure") ///
 		subtitle("Line of best fit and 95% CI") ///
 		scheme(s1color)
+		
+	graph save $figures\repire_incexp_$ddate.gph, replace
+	graph export $figures\repire_incexp_$ddate.png, replace width(4096)
+	
 	
 exit, STATA clear
-

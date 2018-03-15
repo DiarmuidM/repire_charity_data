@@ -24,4 +24,4 @@ def stata_ditty():
 	print('******* FINE, SEE IF I CARE ******')
 	print('                                  ')
 	print('----------------------------------')
-	sleep(2)
+	sleep(2)	
