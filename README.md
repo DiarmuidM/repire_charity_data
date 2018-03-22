@@ -31,7 +31,7 @@ In addition there is a folder containing two Stata do files (scripts):
 You must have Python and Stata installed on your machine. Python is an open source programming language that can be downloaded and installed using the [Anaconda distribution](https://anaconda.org/anaconda/python).
 Stata is a proprietary statistical software package and you must [purchase a licence](https://www.stata.com/products/which-stata-is-right-for-me/) to use it.
 
-The data provided by Benefacts is accessible via an API, which you need to request access to: see its [developer documentation](https://developer.benefacts.ie/) for how to do to register for access.
+The data provided by Benefacts is accessible via their API, which you need to request access to: see its [developer documentation](https://developer.benefacts.ie/) for how to do to register for access.
 
 I recommended using [Sublime Text](https://www.sublimetext.com/3) to write and run the Python scripts, but there are other text editors/IDEs available.
 
