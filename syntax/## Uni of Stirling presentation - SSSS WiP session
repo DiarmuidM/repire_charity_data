@@ -1,0 +1,10 @@
+## Uni of Stirling presentation - SSSS WiP session 21/03/2018
+
+# Structure of session:
+	- 15 minutes for a software demonstration
+	- Aim is to show how certain tasks - collecting, cleaning and analysing data - can be executed in a systematic, often automated manner.
+	- Open sources of data in browser tabs, and say a little about them
+	- Open master.py and explain what it should do
+	- Execute program and display build results
+	- Show the log files and graph(s)
+	- End on why I'm doing this

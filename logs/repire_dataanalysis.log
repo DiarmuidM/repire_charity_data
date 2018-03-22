@@ -22,12 +22,12 @@ Notes:
 
 running C:\Program Files (x86)\Stata15\profile.do ...
 Running Diarmuid McDonnell's Stata Profile 1 
-13:49:55 15 Mar 2018
+12:07:26 21 Mar 2018
 C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\logs
-  <dir>   3/12/18 19:18  .                 
-  <dir>   3/12/18 19:18  ..                
-   0.0k   3/15/18 13:49  repire_dataanalysis.log
-8314.5k   3/15/18 13:49  repire_datacleaning.log
+  <dir>   3/21/18 12:07  .                 
+  <dir>   3/21/18 12:07  ..                
+   0.0k   3/21/18 12:07  repire_dataanalysis.log
+8315.1k   3/21/18 12:07  repire_datacleaning.log
 --------------------------------------------------------------------------------
     Interface settings
       set dockable         on
@@ -45,7 +45,7 @@ C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\logs
       set maxdb            50         dialog boxes
 
 . do C:/Users/mcdonndz-local/Desktop/github/repire_charity_data/syntax/stata/rep
-> ire_dataanalysis.do 20180315 
+> ire_dataanalysis.do 20180321 
 
 . // File: benefacts_das.do
 . // Creator: Diarmuid McDonnell
@@ -118,7 +118,7 @@ C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\findings\
 . global ddate `1'
 
 . di "$ddate"
-20180315
+20180321
 
 . 
 . 
@@ -131,9 +131,9 @@ C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\findings\
 . desc, f
 
 Contains data from C:\Users\mcdonndz-local\Desktop\data\repire_charity_data\data
-> _clean\20180315\registeredcharities_20180315.dta
+> _clean\20180321\registeredcharities_20180321.dta
   obs:         9,914                          
- vars:            47                          15 Mar 2018 13:49
+ vars:            47                          21 Mar 2018 12:07
  size:    32,931,963                          
 --------------------------------------------------------------------------------
               storage   display    value
@@ -219,7 +219,7 @@ scalars:
                   r(N) =  9914
 
 . di r(N) " registered charities on $ddate"
-9914 registered charities on 20180315
+9914 registered charities on 20180321
 
 . 
 .         preserve
@@ -560,49 +560,49 @@ WorshipCentreandShelteredHousingforEl.. |          1        0.01       99.55
                      Diocesan, parishes |        124        1.58       10.78
                       Education support |        259        3.30       14.08
               Emergency relief services |         47        0.60       14.68
-              Environmental enhancement |         35        0.45       15.12
+              Environmental enhancement |         35        0.45       15.13
            Environmental sustainability |         24        0.31       15.43
                 Family support services |        218        2.78       18.21
                            Fund-raising |        417        5.31       23.52
                     Group water schemes |         18        0.23       23.75
    Health services and health promotion |        225        2.87       26.62
-       Heritage and visitor attractions |        126        1.61       28.22
+       Heritage and visitor attractions |        126        1.61       28.23
                   Homelessness services |         57        0.73       28.95
-                               Hospices |         20        0.25       29.20
+                               Hospices |         20        0.25       29.21
                               Hospitals |         33        0.42       29.63
-              International affiliation |         21        0.27       29.89
+              International affiliation |         21        0.27       29.90
               International development |        210        2.68       32.57
-                           Job creation |        118        1.50       34.07
+                           Job creation |        118        1.50       34.08
                          Legal services |         56        0.71       34.79
-                      Local development |      1,038       13.23       48.01
-                            Media, Film |         22        0.28       48.29
-                 Mental health services |        101        1.29       49.58
-                  Museums and libraries |         40        0.51       50.09
+                      Local development |      1,038       13.23       48.02
+                            Media, Film |         22        0.28       48.30
+                 Mental health services |        101        1.29       49.59
+                  Museums and libraries |         40        0.51       50.10
                            Philanthropy |        240        3.06       53.15
-                      Places of worship |        264        3.36       56.51
+                      Places of worship |        264        3.36       56.52
                   Pre-Primary education |         78        0.99       57.51
-                   Pre-school childcare |        503        6.41       63.91
-                      Primary education |        400        5.10       69.01
-Professional or sector representative.. |        318        4.05       73.06
-          Recreational clubs, societies |        100        1.27       74.34
-                 Religious associations |        610        7.77       82.11
-                               Research |         88        1.12       83.23
-               Residential care centres |         56        0.71       83.94
-     Residential mental health services |          5        0.06       84.01
-                    Secondary education |        193        2.46       86.47
-Services for Travellers and ethnic mi.. |         48        0.61       87.08
-              Services for older people |        198        2.52       89.60
-  Services for people with disabilities |        183        2.33       91.93
-                      Sheltered housing |         31        0.40       92.33
-                      Social enterprise |         22        0.28       92.61
-                         Social housing |        288        3.67       96.28
+                   Pre-school childcare |        503        6.41       63.92
+                      Primary education |        400        5.10       69.02
+Professional or sector representative.. |        318        4.05       73.07
+          Recreational clubs, societies |        100        1.27       74.35
+                 Religious associations |        610        7.77       82.12
+                               Research |         88        1.12       83.24
+               Residential care centres |         56        0.71       83.96
+     Residential mental health services |          5        0.06       84.02
+                    Secondary education |        193        2.46       86.48
+Services for Travellers and ethnic mi.. |         48        0.61       87.09
+              Services for older people |        198        2.52       89.61
+  Services for people with disabilities |        183        2.33       91.95
+                      Sheltered housing |         31        0.40       92.34
+                      Social enterprise |         22        0.28       92.62
+                         Social housing |        287        3.66       96.28
                    Sports organisations |         33        0.42       96.70
                   Third-level education |         57        0.73       97.43
      Vocational and technical education |         28        0.36       97.78
                             Voluntarism |         19        0.24       98.02
                          Youth services |        155        1.98      100.00
 ----------------------------------------+-----------------------------------
-                                  Total |      7,848      100.00
+                                  Total |      7,847      100.00
 
 .                 mrtab croreg chyreg ahbreg desreg rfsreg, by(charitystatus) co
 > lumn nofreq
@@ -610,16 +610,16 @@ Services for Travellers and ethnic mi.. |         48        0.61       87.08
             |         Status         
             | Registered  De-registe |      Total
 ------------+------------------------+-----------
-     croreg |      58.23       16.50 |      56.61 
+     croreg |      58.22       16.50 |      56.60 
      chyreg |      95.66       91.42 |      95.49 
-     ahbreg |       5.94        1.98 |       5.79 
+     ahbreg |       5.95        1.98 |       5.79 
      desreg |       4.53        0.00 |       4.35 
      rfsreg |       0.23        0.66 |       0.24 
 ------------+------------------------+-----------
-      Total |     164.59      110.56 |     162.49 
+      Total |     164.58      110.56 |     162.48 
 
-Valid cases:       7789
-Missing cases:     2125
+Valid cases:       7788
+Missing cases:     2126
 
 .                 
 .                 gen freq=1
@@ -650,7 +650,7 @@ Sorted by: county
      +------------------+
      |    county   freq |
      |------------------|
-  1. |             2119 |
+  1. |             2120 |
   2. |    ANTRIM      6 |
   3. |    ARMAGH      3 |
   4. |    CARLOW     93 |
@@ -660,7 +660,7 @@ Sorted by: county
   7. |      CORK    776 |
   8. |     DERRY      3 |
   9. |   DONEGAL    324 |
- 10. |    DUBLIN   2619 |
+ 10. |    DUBLIN   2618 |
      |------------------|
  11. | FERMANAGH      2 |
  12. |    GALWAY    412 |
@@ -700,11 +700,11 @@ Sorted by: county
 25%           93              6       Sum of Wgt.          31
 
 50%          158                      Mean           319.8065
-                        Largest       Std. Dev.       570.037
+                        Largest       Std. Dev.      570.0078
 75%          252            412
-90%          412            776       Variance       324942.2
-95%         2119           2119       Skewness       3.261459
-99%         2619           2619       Kurtosis       12.56965
+90%          412            776       Variance       324908.9
+95%         2120           2120       Skewness       3.260837
+99%         2618           2618       Kurtosis       12.56398
 
 .                 table county if county!="" , c(sum freq)                      
 >   
@@ -720,7 +720,7 @@ Sorted by: county
      CORK |        776
     DERRY |          3
   DONEGAL |        324
-   DUBLIN |       2619
+   DUBLIN |       2618
 FERMANAGH |          2
    GALWAY |        412
     KERRY |        250
@@ -768,18 +768,26 @@ WESTMEATH |        128
 .                 graph save $figures\repire_geogdistribution_$ddate.gph, replac
 > e
 (note: file C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\figures\r
-> epire_geogdistribution_20180315.gph not found)
+> epire_geogdistribution_20180321.gph not found)
 (file C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\figures\repire_
-> geogdistribution_20180315.gph saved)
+> geogdistribution_20180321.gph saved)
 
 .                 graph export $figures\repire_geogdistribution_$ddate.png, repl
 > ace width(4096)
 (note: file C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\figures\\
-> repire_geogdistribution_20180315.png not found)
+> repire_geogdistribution_20180321.png not found)
 (file C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\figures\\repire
-> _geogdistribution_20180315.png written in PNG format)
+> _geogdistribution_20180321.png written in PNG format)
 
 .                                 
+.         restore
+
+.         
+.         preserve
+
+.         
+.                 
+.         
 .         restore
 
 . 
@@ -791,9 +799,9 @@ WESTMEATH |        128
 . desc, f
 
 Contains data from C:\Users\mcdonndz-local\Desktop\data\repire_charity_data\data
-> _clean\20180315\annualreturns_20180315.dta
+> _clean\20180321\annualreturns_20180321.dta
   obs:        13,809                          
- vars:            16                          15 Mar 2018 13:49
+ vars:            16                          21 Mar 2018 12:07
  size:    38,719,683                          
 --------------------------------------------------------------------------------
               storage   display    value
@@ -829,7 +837,7 @@ scalars:
                   r(N) =  13809
 
 . di r(N) " annual returns on $ddate"
-13809 annual returns on 20180315
+13809 annual returns on 20180321
 
 .         
 .         // Summary statistics
@@ -967,15 +975,15 @@ lnexp    overall |  11.47208   2.938499          0   23.38233 |     N =   13801
 .                 
 .         graph save $figures\repire_incexp_$ddate.gph, replace
 (note: file C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\figures\r
-> epire_incexp_20180315.gph not found)
+> epire_incexp_20180321.gph not found)
 (file C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\figures\repire_
-> incexp_20180315.gph saved)
+> incexp_20180321.gph saved)
 
 .         graph export $figures\repire_incexp_$ddate.png, replace width(4096)
 (note: file C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\figures\\
-> repire_incexp_20180315.png not found)
+> repire_incexp_20180321.png not found)
 (file C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\figures\\repire
-> _incexp_20180315.png written in PNG format)
+> _incexp_20180321.png written in PNG format)
 
 .         
 .         

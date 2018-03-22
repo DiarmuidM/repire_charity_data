@@ -32,14 +32,14 @@ except:
 # Run python scripts in order: #
 
 import repire_charityregister
-print('Finished processing repire_charityregister.py')
+print('Finished executing repire_charityregister.py')
 print('                                             ')
 print('---------------------------------------------')
 print('                                             ')
 sleep(10)
 
 import benefacts_volcodemembers
-print('Finished processing benefacts_volcodemembers.py')
+print('Finished executing benefacts_volcodemembers.py')
 print('                                             ')
 print('---------------------------------------------')
 print('                                             ')
@@ -47,7 +47,7 @@ sleep(10)
 
 import benefacts_taxefficientgifts
 sleep(10)
-print('Finished processing benefacts_taxefficientgifts.py')
+print('Finished executing benefacts_taxefficientgifts.py')
 print('                                                  ')
 print('                                                  ')
 print('                                                  ')

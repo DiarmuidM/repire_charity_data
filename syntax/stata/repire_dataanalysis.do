@@ -86,6 +86,12 @@ di r(N) " registered charities on $ddate"
 		graph export $figures\repire_geogdistribution_$ddate.png, replace width(4096)
 				
 	restore
+	
+	preserve
+	
+		
+	
+	restore
 
 
 // Annual Returns
