@@ -29,7 +29,7 @@ In addition there is a folder containing two Stata do files (scripts):
 ## Pre-requisites
 
 You must have Python and Stata installed on your machine. Python is an open source programming language that can be downloaded and installed using the [Anaconda distribution](https://anaconda.org/anaconda/python).
-[Stata](https://www.stata.com/products/which-stata-is-right-for-me/) is a proprietary statistical software package and you must purchase a licence to use it.
+Stata is a proprietary statistical software package and you must [purchase a licence](https://www.stata.com/products/which-stata-is-right-for-me/) to use it.
 
 Accessing the data held by Benefacts requires their permission in the form of a Public Key: see its [developer documention](https://developer.benefacts.ie/) for how to register for this.
 
@@ -37,4 +37,4 @@ I recommended using [Sublime Text](https://www.sublimetext.com/3) to write and r
 
 ## Final comments
 
-This repository is likely to be updated on a semi-regular basis. If you would like to collaborate on developing the repository further, or on a research project employing these datasets, then don't hesitate to get in [contact](d.mcdonnell.1@bham.ac.uk).
+This repository is likely to be updated on a semi-regular basis. If you would like to collaborate on developing the repository further, or have an idea for a research project employing these datasets, then don't hesitate to get in [contact](d.mcdonnell.1@bham.ac.uk).
