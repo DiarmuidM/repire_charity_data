@@ -307,7 +307,15 @@ codebook *, problems
 	rename ReportEndDate edate
 	gen returnyear = eyear
 	
+		// Most recent annual return
 	
+		 capture drop latest_yr max_yr
+		 bysort charityid: egen max_yr = max(returnyear)
+		 gen latest_yr = .
+		 replace latest_yr = 1 if max_yr==returnyear
+		 tab latest_yr
+		 list charityid latest_yr max_yr returnyear
+		
 	list bdate edate, clean
 
 	
@@ -316,17 +324,35 @@ codebook *, problems
 	sort charityid edate
 	xtset charityid edate
 	xtdes // What do I do about edates that fall within the same year for a given charity?
+	
+	
+	/* Create a dataset for merging with the Register */
+	
+	preserve
+		
+		sort charityid
+		keep if latest_yr==1
+		count
+		keep charityid charitysize inc exp volunteers returnyear
+		
+		duplicates tag charityid, gen(dupcharid)
+		duplicates drop charityid, force
+		/*
+			I need to sort this issue: duplicates of charityid and returnyear.
+		*/
+		
+		sav $workingdata\$ddate\annreturn_merge_$ddate.dta, replace
+		
+	restore	
 
-/*	
+
 label variable charityid "Unique id of charity - assigned by Charities Regulator"
 label variable name "Name of charity"
-label variable chynum "Revenue (Charities Unit) number"
-label variable cronum "Companies Registration Office number"
-label variable legalform "Legal form of charity e.g. Company, Trust"
-label variable dupname "Shares name with another charity"
-label variable dupchy "Shares CHY number with another charity"
-label variable dupcro "Shares CRO number with another charity"
-*/
+label variable byear "Report start year"
+label variable eyear "Report end year"
+label variable returnyear "Year financial accounts refer to - FYE"
+label variable latest_yr "Most recent `returnyear` - dummy var"
+label variable max_yr "Most recent `returnyear`"
 
 save $cleandata\$ddate\annualreturns_$ddate.dta, replace
 
@@ -409,6 +435,19 @@ codebook *, problems
 	tab subsectorcode
 	tab subsectorname
 	
+		// Create a new variable to group subsectors
+		
+		** capture drop sector
+		gen sector = subsectorcode
+		recode sector 1/1.9=1 2/2.9=2 3/3.9=3 4/4.9=4 5/5.9=5 6/6.9=6 7/7.9=7 8/8.9=8 9/9.9=9 10/10.9=10 11/11.9=11 12/12.9=12
+		tab sector
+		tab subsectorcode if sector==1 | sector==4 | sector==7
+		
+		label define sector_label 1 "Arts, culture, media" 2 "Recreation, sports" 3 "Education, research" 4 "Health" 5 "Social services" 6 "Development, housing" ///
+			7 "Environment" 8 "Advocacy, law, politics" 9 "Philanthropy, voluntarism" 10 "International" 11 "Religion" 12 "Professional, vocational"
+		label values sector sector_label	
+		tab sector
+		
 	
 	codebook registeredaddress county // County could be useful.
 	
@@ -480,6 +519,7 @@ label variable charityid "Unique id of charity - assigned by Charities Regulator
 label variable beneid "Unique id of charity - assigned by Benefacts"
 label variable beneregid "Register id of charity - assigned by Benefacts"
 label variable registeredname "Name of charity"
+label variable sector "Classification of charity i.e. sector it operates in"
 label variable b_chynum "Revenue (Charities Unit) number - Benefacts dataset"
 label variable b_cronum "Companies Registration Office number - Benefacts dataset"
 label variable dupb_name "Shares name with another charity - Benefacts dataset"
@@ -644,7 +684,7 @@ foreach volcode in `volcodes' {
 	save $cleandata\$ddate\benefacts_registeredcharities_$ddate.dta, replace
 
 
-	// Merge Benefacts with CR dataset
+	// Merge Benefacts with Charity Register
 	
 	use $workingdata\$ddate\registeredcharities_$ddate.dta, clear
 	
@@ -657,6 +697,17 @@ foreach volcode in `volcodes' {
 	keep if _merge!=2
 	rename _merge benemerge
 	
+	
+	// Merge annual returns with Charity Register
+		
+	merge 1:1 charityid using $workingdata\$ddate\annreturn_merge_$ddate.dta, keep(match master using)
+	tab _merge
+	keep if _merge!=2
+	rename _merge annretmerge
+	/*
+		Why so few matches? I guess because these charities haven't had to submit a return yet.
+	*/
+	
 	desc, f
 	count
 
@@ -664,7 +715,8 @@ foreach volcode in `volcodes' {
 	
 	save $cleandata\$ddate\registeredcharities_$ddate.dta, replace
 
-/* Clear working data folder */
+
+	/* Clear working data folder */
 
 pwd
 	

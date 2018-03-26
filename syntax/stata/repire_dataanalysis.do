@@ -55,14 +55,32 @@ desc, f
 count
 return list
 di r(N) " registered charities on $ddate"
-
+	
+	// Non-financial characteristics
+		
+	tab1 charitystatus legalform subsectorname
+	mrtab croreg chyreg ahbreg desreg rfsreg, by(charitystatus) column
+	
+	// Summary stats - maybe collapse dataset to one observation?
+	
+	count
+		gen regchar_total = r(N)
+	count if charitystatus==1
+		gen charactive_total = r(N)	
+	count if benemerge==3
+		gen benechar_total = r(N)
+	**count if taxgifts==1
+		**gen tax_total = r(N)
+	count if governancecode==1
+		gen gov_total = r(N)
+	count if ictr==1
+		gen ictr_total = r(N)
+		
+	
+	// Geographical distribution of charities
+		
 	preserve
 	
-		// Non-financial characteristics
-		
-		tab1 charitystatus legalform subsectorname
-		mrtab croreg chyreg ahbreg desreg rfsreg, by(charitystatus) column nofreq
-		
 		gen freq=1
 		collapse (count)freq, by(county)
 		desc, f
@@ -77,30 +95,100 @@ di r(N) " registered charities on $ddate"
 			legend(off)  ///
 			ytitle("No. of Charities") ///
 			title("Geographical Distribution of Charities", span)  ///
-			subtitle("by counties of the Rep. of Ireland", span)  ///
-			note("Source:  CR, Benefacts CR. Produced: $S_DATE") ///
-			blabel(bar, position(outside) format(%9.0f) color(black) size(vsmall)) ///
-			scheme(s1mono) ysize(5) ylabel(, nogrid) name(geod, replace)
+			subtitle("By counties of the Rep. of Ireland", span)  ///
+			note("Source: CR, Benefacts CR. Produced: $S_DATE") ///
+			blabel(bar, position(outside) format(%9.0f) color(black) size(tiny)) ///
+			scheme(s1mono) ysize(5) ylabel(, nogrid labsize(small)) name(geod, replace)
+		/*
+			Fix overspilling of blabel with graph area.
 			
+			How do I include sample size in note?
+		*/
+		
 		graph save $figures\repire_geogdistribution_$ddate.gph, replace
 		graph export $figures\repire_geogdistribution_$ddate.png, replace width(4096)
 				
 	restore
 	
 	preserve
-	
 		
-	
+		// Sectoral distribution of charities
+		
+		gen freq=1
+		collapse (count)freq, by(sector)
+		desc, f
+		count
+		list
+		sum freq, detail
+		table sector if sector!=. , c(sum freq)			
+		
+		drop if sector==.
+		
+		graph hbar freq, over(sector, sort(freq) descending label(labsize(vsmall))) ///
+			legend(off)  ///
+			ytitle("No. of Charities") ///
+			title("Sectoral Distribution of Charities", span)  ///
+			subtitle("By Benefacts charity classification", span)  ///
+			note("Source: Charities Regulator, Benefacts. Produced: $S_DATE") ///
+			blabel(bar, position(outside) format(%9.0f) color(black) size(tiny)) ///
+			scheme(s1mono) ysize(5) ylabel(, nogrid labsize(small)) name(sect, replace)
+		/*
+			Fix overspilling of blabel with graph area.
+			
+			How do I include sample size in note?
+		*/
+			
+		graph save $figures\repire_sectdistribution_$ddate.gph, replace
+		graph export $figures\repire_sectdistribution_$ddate.png, replace width(4096)
+				
 	restore
+	
+	
+	// Size distribution of charities
+		
+	preserve
+				
+		gen freq=1
+		collapse (count)freq, by(charitysize)
+		desc, f
+		count
+		list
+		sum freq, detail
+		table charitysize if charitysize!=. , c(sum freq)			
+		
+		drop if charitysize==.
+		
+		graph hbar freq, over(charitysize, sort(freq) descending label(labsize(vsmall))) ///
+			legend(off)  ///
+			ytitle("No. of Charities") ///
+			title("Size Distribution of Charities", span)  ///
+			subtitle("By latest gross income", span)  ///
+			note("Source: Charities Regulator. Produced: $S_DATE") ///
+			blabel(bar, position(outside) format(%9.0f) color(black) size(tiny)) ///
+			scheme(s1mono) ysize(5) ylabel(, nogrid labsize(small)) name(size, replace)
+		/*
+			Fix overspilling of blabel with graph area.
+			
+			How do I include sample size in note?
+		*/
+			
+		graph save $figures\repire_sizedistribution_$ddate.gph, replace
+		graph export $figures\repire_sizedistribution_$ddate.png, replace width(4096)
+				
+	restore
+	
+	// Financial statistics
+	
+	
 
 
 // Annual Returns
-
+/*
 use $cleandata\$ddate\annualreturns_$ddate.dta, clear	
 desc, f
 count
 return list
-di r(N) " annual returns on $ddate"
+di r(N) " annual returns on $ddate"	
 	
 	// Summary statistics
 	
@@ -119,6 +207,6 @@ di r(N) " annual returns on $ddate"
 		
 	graph save $figures\repire_incexp_$ddate.gph, replace
 	graph export $figures\repire_incexp_$ddate.png, replace width(4096)
-	
+*/	
 	
 exit, STATA clear

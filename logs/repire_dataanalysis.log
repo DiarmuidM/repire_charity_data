@@ -1,0 +1,1123 @@
+
+  ___  ____  ____  ____  ____ (R)
+ /__    /   ____/   /   ____/
+___/   /   /___/   /   /___/   15.1   Copyright 1985-2017 StataCorp LLC
+  Statistics/Data Analysis            StataCorp
+                                      4905 Lakeway Drive
+     Special Edition                  College Station, Texas 77845 USA
+                                      800-STATA-PC        http://www.stata.com
+                                      979-696-4600        stata@stata.com
+                                      979-696-4601 (fax)
+
+46-user Stata network perpetual license:
+       Serial number:  401506202372
+         Licensed to:  Diarmuid McDonnell
+                       University of Birmingham
+
+Notes:
+      1.  Stata is running in batch mode.
+      2.  Unicode is supported; see help unicode_advice.
+      3.  Maximum number of variables is set to 5000; see help set_maxvar.
+
+
+running C:\Program Files (x86)\Stata15\profile.do ...
+Running Diarmuid McDonnell's Stata Profile 1 
+21:27:48 26 Mar 2018
+C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\logs
+  <dir>   3/26/18 19:58  .                 
+  <dir>   3/26/18 19:58  ..                
+   0.0k   3/26/18 21:27  repire_dataanalysis.log
+9151.1k   3/26/18 21:27  repire_datacleaning.log
+--------------------------------------------------------------------------------
+    Interface settings
+      set dockable         on
+      set dockingguides    on
+      set floatwindows     off
+      set locksplitters    off
+      set pinnable         on
+      set doublebuffer     on
+      --------------------------------------------------------------------------
+      set linegap          1          pixels
+      set scrollbufsize    2048000    characters
+      set fastscroll       on
+      set reventries       5000       lines
+      --------------------------------------------------------------------------
+      set maxdb            50         dialog boxes
+
+. do C:/Users/mcdonndz-local/Desktop/github/repire_charity_data/syntax/stata/rep
+> ire_dataanalysis.do 20180326 
+
+. // File: benefacts_das.do
+. // Creator: Diarmuid McDonnell
+. // Created: 27/02/2018
+. // Updated: recorded in Github file history
+. // Repository: https://github.com/DiarmuidM/benefacts_nonprofit_data_ireland
+. 
+. ******* Republic of Ireland Charity Data - Data Analysis *******
+. 
+. /* 
+>         This do file performs the following tasks:
+>                 - opens clean dataset from the most recent download from Benef
+> acts
+>                 - performs some basic analyses
+>                 - saves these analyses as graphs
+>                 
+>         The analyses should focus on:
+>                 - number and types of charities operating in Ireland
+>                 - latest financial profile of organisations
+>                 - summary statistics for longitudinal data
+> */
+. 
+. /* Define paths to the data and syntax */
+. 
+. global projpath "C:\Users\mcdonndz-local\Desktop\github\repire_charity_data"
+
+. global datapath "C:\Users\mcdonndz-local\Desktop\data\repire_charity_data"
+
+. 
+. global dofiles "$projpath\syntax\"
+
+. global figures "$projpath\figures\"
+
+. global findings "$projpath\findings\"
+
+. 
+. global rawdata "$datapath\data_raw\"
+
+. global cleandata "$datapath\data_clean\" 
+
+. global workingdata "$datapath\data_working\" 
+
+. 
+. di "$projpath"
+C:\Users\mcdonndz-local\Desktop\github\repire_charity_data
+
+. di "$dofiles"
+C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\syntax\
+
+. di "$rawdata"
+C:\Users\mcdonndz-local\Desktop\data\repire_charity_data\data_raw\
+
+. di "$cleandata"
+C:\Users\mcdonndz-local\Desktop\data\repire_charity_data\data_clean\
+
+. di "$workingdata"
+C:\Users\mcdonndz-local\Desktop\data\repire_charity_data\data_working\
+
+. di "$figures"
+C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\figures\
+
+. di "$findings"
+C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\findings\
+
+. 
+. 
+. // Take download date from 1st argument of 'dostata' function in repire_master
+> .py, and use it to name files.
+. 
+. global ddate `1'
+
+. di "$ddate"
+20180326
+
+. 
+. 
+. /* Open the clean datasets */
+. 
+. // Registered charities
+. 
+. use $cleandata\$ddate\registeredcharities_$ddate.dta, clear
+
+. desc, f
+
+Contains data from C:\Users\mcdonndz-local\Desktop\data\repire_charity_data\data
+> _clean\20180326\registeredcharities_20180326.dta
+  obs:         9,914                          
+ vars:            55                          26 Mar 2018 21:27
+ size:    33,159,985                          
+--------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+--------------------------------------------------------------------------------
+charityid       long    %10.0g                Unique id of charity - assigned by
+                                                Charities Regulator
+name            str97   %97s                  Name of charity
+alias           str837  %837s                 Alias
+principaladdress
+                str154  %154s                 Principal Address
+legalform       str206  %206s                 Legal form of charity e.g.
+                                                Company, Trust
+chynum          double  %10.0g                Revenue (Charities Unit) number
+cronum          str73   %73s                  Companies Registration Office
+                                                number
+countryestablished
+                str223  %223s                 Country Established
+CharitablePurpose
+                str865  %865s                 Charitable Purpose
+charitableobjects
+                strL    %9s                   Charitable Objects
+dupname         byte    %12.0g                Shares name with another charity
+dupchy          int     %12.0g                Shares CHY number with another
+                                                charity
+dupcro          int     %12.0g                Shares CRO number with another
+                                                charity
+charitystatus   byte    %25.0g     charitystatus_lab
+                                              Status
+beneregid       str7    %9s                   Register id of charity - assigned
+                                                by Benefacts
+registeredname  str116  %116s                 Name of charity
+subsectorcode   float   %9.0g                 Subsector Code
+subsectorname   str45   %45s                  Subsector Name
+registeredaddress
+                str126  %126s                 Registered Address
+county          str9    %9s                   County
+postcode        str8    %9s                   Eircode
+b_cronum        long    %12.0g                Companies Registration Office
+                                                number - Benefacts dataset
+b_chynum        int     %8.0g                 Revenue (Charities Unit) number -
+                                                Benefacts dataset
+ahbstatus       str10   %10s                  AHB
+desstatus       str6    %9s                   DES
+rfsnum          str6    %9s                   RFS
+benefactsurl    str70   %70s                   BenefactsUrl
+dupb_name       byte    %12.0g                Shares name with another charity -
+                                                Benefacts dataset
+dupb_cro        int     %12.0g                Shares CRO number with another
+                                                charity - Benefacts dataset
+dupb_cra        byte    %12.0g                Shares CRA number with another
+                                                charity - Benefacts dataset
+dupb_chy        int     %12.0g                Shares CHY number with another
+                                                charity - Benefacts dataset
+dupb_des        int     %12.0g                Shares DES number with another
+                                                charity - Benefacts dataset
+dupb_rfs        int     %12.0g                Shares RFS number with another
+                                                charity - Benefacts dataset
+beneid          str36   %36s                  Unique id of charity - assigned by
+                                                Benefacts
+dupbeneid       byte    %12.0g                
+sector          byte    %25.0g     sector_label
+                                              Classification of charity i.e.
+                                                sector it operates in
+croreg          byte    %9.0g                 
+chyreg          byte    %9.0g                 
+ahbreg          byte    %9.0g                 
+desreg          byte    %9.0g                 
+rfsreg          byte    %9.0g                 
+taxgifts        byte    %9.0g                 Eligible for tax efficient gifts
+taxmerge        byte    %23.0g     _merge     
+governancecode  byte    %9.0g                 Complies with GOVERNANCECODE
+govmerge        byte    %23.0g     _merge     
+ictr            byte    %9.0g                 Complies with ICTR
+ictrmerge       byte    %23.0g     _merge     
+benemerge       byte    %23.0g     _merge     
+inc             double  %10.0g                Financial Gross Income
+exp             double  %10.0g                Financial Total Expenditure
+charitysize     byte    %8.0g      charitysize_lab
+                                              Report Size
+volunteers      byte    %17.0g     volunteers_lab
+                                              Volunteer Count
+returnyear      int     %9.0g                 
+dupcharid       byte    %12.0g                
+annretmerge     byte    %23.0g     _merge     
+--------------------------------------------------------------------------------
+Sorted by: charityid
+
+. count
+  9,914
+
+. return list
+
+scalars:
+                  r(N) =  9914
+
+. di r(N) " registered charities on $ddate"
+9914 registered charities on 20180326
+
+.         
+.         // Non-financial characteristics
+.                 
+.         tab1 charitystatus legalform subsectorname
+
+-> tabulation of charitystatus  
+
+       Status |      Freq.     Percent        Cum.
+--------------+-----------------------------------
+   Registered |      8,845       89.22       89.22
+De-registered |      1,069       10.78      100.00
+--------------+-----------------------------------
+        Total |      9,914      100.00
+
+-> tabulation of legalform  
+
+    Legal form of charity e.g. Company, |
+                                  Trust |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+                                  16399 |          1        0.01        0.01
+                     ACharitableSociety |          1        0.01        0.03
+                               Abequest |          1        0.01        0.04
+AdivisionofSistersofCharityoftheIncar.. |          1        0.01        0.05
+                 AdvancedmentofReligion |          1        0.01        0.06
+                  AdvancementofReligion |          7        0.09        0.15
+                  Advancementofreligion |          3        0.04        0.19
+                         AffiliatedClub |          1        0.01        0.20
+              AgencyofDublinArchdiocese |          1        0.01        0.21
+               Alegalentiteynotacompany |          1        0.01        0.23
+                     AnIncorporatedBody |          1        0.01        0.24
+                          AnimalWelfare |          1        0.01        0.25
+                            Association |      1,305       16.47       16.72
+                           Associations |          1        0.01       16.73
+                Autonomousvoluntarybody |          1        0.01       16.75
+                    Bequest,withnoTrust |          1        0.01       16.76
+                      BoardofManagement |          5        0.06       16.82
+  BoardofManagement(Post-PrimarySchool) |        185        2.33       19.16
+   BoardofManagement(PostPrimarySchool) |          1        0.01       19.17
+       BoardofManagement(PrimarySchool) |      1,113       14.05       33.22
+   BoardofManagement(postPrimarySchool) |          1        0.01       33.23
+                    Boardsofmanagement. |          1        0.01       33.24
+                          BodyCorporate |          5        0.06       33.30
+                   CEISTSecondarySchool |          1        0.01       33.32
+             CHARITYWITHOWNCONSTITUTION |          1        0.01       33.33
+                                 CHURCH |          1        0.01       33.34
+                    CHURCH(PENTECOSTAL) |          1        0.01       33.35
+                        COMMUNITYCENTRE |          1        0.01       33.37
+                     CancerSupportGroup |          1        0.01       33.38
+             CanonicallyConstitutedbody |          2        0.03       33.40
+             Canonicallyconstitutedbody |          3        0.04       33.44
+              CareofSick&RetiredPriests |          1        0.01       33.46
+                      CentreofEducation |          1        0.01       33.47
+            CharitableCommunityServices |          1        0.01       33.48
+                        Charitabletrust |          1        0.01       33.49
+                              Charities |          1        0.01       33.51
+                                Charity |          3        0.04       33.54
+                   CharitywithCommittee |          1        0.01       33.56
+             CharterapprovedbyMinHealth |          1        0.01       33.57
+                              Christian |          1        0.01       33.58
+                        ChristianChurch |          1        0.01       33.59
+                 ChristianReligiousBody |          1        0.01       33.61
+                                 Church |         31        0.39       34.00
+                        ChurchBingoClub |          1        0.01       34.01
+                             ChurchBody |          1        0.01       34.02
+                        ChurchOfIreland |          1        0.01       34.04
+                       ChurchVestryBody |          1        0.01       34.05
+                          Churchcharity |          1        0.01       34.06
+                        ChurchofIreland |         13        0.16       34.23
+            ChurchofIrelandConstitution |         13        0.16       34.39
+                 ChurchofIrelandDiocese |          1        0.01       34.40
+                        Churchofireland |          1        0.01       34.41
+                      CivilConstitution |          1        0.01       34.43
+                                   Club |          1        0.01       34.44
+                  ClubwithaConstitution |          1        0.01       34.45
+                           Co-operative |         31        0.39       34.84
+                CoLimitedByShareCapital |          1        0.01       34.86
+                             Collective |          1        0.01       34.87
+                     CollegeofEducation |          1        0.01       34.88
+                              Committee |          2        0.03       34.91
+                    Committeerunsociety |          1        0.01       34.92
+                              Community |          1        0.01       34.93
+                    Community&Voluntary |          1        0.01       34.94
+                     CommunityCommittee |          1        0.01       34.96
+                       CommunityCouncil |          2        0.03       34.98
+              CommunityEmploymentScheme |          1        0.01       34.99
+                         CommunityGroup |          2        0.03       35.02
+                    CommunityInitiative |          1        0.01       35.03
+               CommunitybasedPlayschool |          1        0.01       35.05
+             Communitybasedorganisation |          1        0.01       35.06
+                        Communityschool |          1        0.01       35.07
+                       Communityservice |          1        0.01       35.08
+              CompanyLimitedbyGuarantee |      3,655       46.13       81.21
+                 CompanyLimitedbyShares |          1        0.01       81.22
+                  CompanyLtdbyGuarantee |          1        0.01       81.23
+              Companylimitedbyguarantee |          1        0.01       81.25
+            ComunityFirstResponderGroup |          1        0.01       81.26
+                 Congregation,religious |          1        0.01       81.27
+                           Constitution |          3        0.04       81.31
+            ConstitutionChurchofIreland |          1        0.01       81.32
+                  ConstitutionofCharity |          1        0.01       81.34
+                                Convent |          1        0.01       81.35
+                   Cultural/educational |          1        0.01       81.36
+                          CurrentlyPULC |          1        0.01       81.37
+                              DayCentre |          1        0.01       81.39
+                DaycarecenterforElderly |          1        0.01       81.40
+             DesiginatedActivityCompany |         29        0.37       81.76
+                DioceseCentral&Parishes |          1        0.01       81.78
+                        DramaticSociety |          1        0.01       81.79
+                          EDUCATIONBODY |          1        0.01       81.80
+                         Ecclesiastical |          1        0.01       81.81
+                              Education |          2        0.03       81.84
+                      Education(school) |          1        0.01       81.85
+                Education-PrimarySchool |          1        0.01       81.87
+                     EducationAuthority |          1        0.01       81.88
+      EducationBoard(DeptofEduc&Skills) |          1        0.01       81.89
+                          EducationBody |          2        0.03       81.92
+                        EducationalBody |          3        0.04       81.95
+                     EducationalCharity |          2        0.03       81.98
+                 Educationalinstitution |          1        0.01       81.99
+                   EducationandTraining |          1        0.01       82.00
+              EducationandTrainingBoard |          1        0.01       82.02
+Established-DublinCemeteriesCommittee.. |          1        0.01       82.03
+                 EstablishedbyHighCourt |          1        0.01       82.04
+              Facilitytomeetneedsofarea |          1        0.01       82.05
+                   FamilyResourceCentre |          1        0.01       82.07
+                            FilmSociety |          1        0.01       82.08
+                             Foundation |          3        0.04       82.12
+                        FriendlySociety |         52        0.66       82.77
+                              Friendsof |          1        0.01       82.79
+FriendsoftheNationalCollectionsofIrel.. |          1        0.01       82.80
+                      FundcreatedbyWill |          1        0.01       82.81
+                   Fundraisingcommittee |          1        0.01       82.82
+                 GovernedbyConstitution |          1        0.01       82.84
+                      Governedbystatute |          1        0.01       82.85
+             Groupofpeoplewithcommittee |          1        0.01       82.86
+             HEIestablishedbyOireachtas |          1        0.01       82.87
+               HigherEducationInstitute |          1        0.01       82.89
+                      HistoricalSociety |          2        0.03       82.91
+                               Hospital |          2        0.03       82.94
+                     HospitalSI178/1971 |          1        0.01       82.95
+                         HousingCharity |          1        0.01       82.96
+                  IncorporatedbyStatute |          1        0.01       82.98
+                   Industrial&Provident |          1        0.01       82.99
+            Industrial&ProvidentSociety |          2        0.03       83.01
+                 IndustrialandProvident |          1        0.01       83.03
+                  InstituteofTechnology |          1        0.01       83.04
+                       IrishWaterSafety |          1        0.01       83.05
+                                    LLC |          1        0.01       83.06
+             LadiesGuildNCHConstitution |          1        0.01       83.08
+            LimitedLiabilityPartnership |          2        0.03       83.10
+                     Limitedbyguarantee |          1        0.01       83.11
+                    LocalCommunitygroup |          1        0.01       83.13
+                   Localauthoritymuseum |          1        0.01       83.14
+                 Localcharityforseniors |          1        0.01       83.15
+             Managingacharitablebequest |          1        0.01       83.17
+                Marinerescueandrecovery |          1        0.01       83.18
+                            MasonicBody |          1        0.01       83.19
+                         MasonicCharity |          1        0.01       83.20
+                 Meals-on-WheelsService |          1        0.01       83.22
+                         MedicalCharity |          1        0.01       83.23
+                    MinisterialTraining |          1        0.01       83.24
+                         MusicalSociety |          1        0.01       83.25
+                                    NGO |          1        0.01       83.27
+                      NationalExecutive |          1        0.01       83.28
+                Non-commercialstatebody |          1        0.01       83.29
+            NonProfitCounsellingService |          1        0.01       83.30
+                  NonProfitOrganisation |          1        0.01       83.32
+       NondenominationalChristianChurch |          1        0.01       83.33
+                              Nonprofit |          1        0.01       83.34
+             Not-for-ProfitCommunityOrg |          1        0.01       83.35
+                         Notapplicable. |          1        0.01       83.37
+               NotforprofitVoluntaryOrg |          1        0.01       83.38
+               Notforprofitorganisation |          1        0.01       83.39
+              Notforprofitvoluntaryorg. |          1        0.01       83.40
+                           OldFolksHome |          1        0.01       83.42
+                             OtherTrust |        186        2.35       85.76
+                    Parent'sAssociation |          1        0.01       85.78
+                                 Parish |          1        0.01       85.79
+                           ParishChurch |          2        0.03       85.82
+                 ParishCommunityCouncil |          1        0.01       85.83
+                            Partnership |          1        0.01       85.84
+    PartoftheLimerickCity&CountyCouncil |          1        0.01       85.85
+                   PastoralCareofParish |          1        0.01       85.87
+PoliciesanddecisionsratifiedbytheScoi.. |          1        0.01       85.88
+                     PoorClareMonastery |          1        0.01       85.89
+                      PostPrimarySchool |          1        0.01       85.90
+                     PresbyterianChurch |          1        0.01       85.92
+                 PresbyterianChurchHall |          1        0.01       85.93
+                              Preschool |          1        0.01       85.94
+                          PrimarySchool |          4        0.05       85.99
+                        PrivateCemetery |          1        0.01       86.00
+                 PrivateCharitableTrust |        436        5.50       91.51
+                         PrivateCharity |          1        0.01       91.52
+                    PrivateCharityGroup |          1        0.01       91.53
+                  PrivateLimitedCompany |        349        4.40       95.94
+                PrivateUnlimitedCompany |         12        0.15       96.09
+                    PublicBenefitEntity |          1        0.01       96.10
+                             PublicBody |          3        0.04       96.14
+                   PublicLimitedCompany |         98        1.24       97.38
+                           PublicSector |          1        0.01       97.39
+              PublicUnltdCo.,nosharecap |          1        0.01       97.40
+                PublicVoluntaryHospital |          1        0.01       97.41
+                    QuakerFundCommittee |          1        0.01       97.43
+                              RELIGIOUS |          1        0.01       97.44
+              RegisteredasaBusinessname |          1        0.01       97.45
+                               Religion |          3        0.04       97.49
+                              Religious |          3        0.04       97.53
+                      Religious(Church) |          1        0.01       97.54
+                    ReligiousActivities |          1        0.01       97.55
+                          ReligiousBody |          2        0.03       97.58
+                       ReligiousCharity |          1        0.01       97.59
+                     ReligiousCommunity |          2        0.03       97.61
+                  ReligiousCongregation |          9        0.11       97.73
+                  ReligiousConstitution |          1        0.01       97.74
+                         ReligiousOrder |          6        0.08       97.82
+                 ReligiousOrganaisation |          1        0.01       97.83
+                  ReligiousOrganisation |          5        0.06       97.89
+                       ReligiousSisters |          1        0.01       97.91
+                       ReligiousSociety |          2        0.03       97.93
+                  Religiousorganisation |          2        0.03       97.96
+                      ResearchInstitute |          1        0.01       97.97
+               RoadSafety/VictimSupport |          1        0.01       97.98
+                 RoyalCharterGovernance |         29        0.37       98.35
+                 STATEDFUNDEDPUBLICBODY |          1        0.01       98.36
+                  SchemeofIncorporation |          1        0.01       98.37
+SchemeundertheEducationalEndowments(I.. |          1        0.01       98.38
+                                 School |          7        0.09       98.47
+                   SchoolSupportService |          1        0.01       98.49
+              ScottishRegisteredCharity |          1        0.01       98.50
+                      SecondLevelSchool |          1        0.01       98.51
+                        SecondarySchool |          4        0.05       98.56
+               SeeConstitutionenclosed. |          1        0.01       98.57
+                   SetupunderRTCAct1992 |          1        0.01       98.59
+                       ShelteredHousing |          1        0.01       98.60
+   SingleMemberPrivateCoLimitedbyShares |          1        0.01       98.61
+                         SmallCommittee |          1        0.01       98.62
+                           Smallcharity |          1        0.01       98.64
+                SocialServicesCommittee |          1        0.01       98.65
+                                Society |          2        0.03       98.67
+                 SocietyofApostolicLife |          1        0.01       98.69
+                          SpecialSchool |          1        0.01       98.70
+                            StateAgency |          2        0.03       98.73
+                         StatutoryBoard |          1        0.01       98.74
+                          StatutoryBody |          6        0.08       98.81
+                  StatutoryBodyCoporate |          1        0.01       98.83
+                  StatutoryOrganisation |          1        0.01       98.84
+                          Statutorybody |          1        0.01       98.85
+                  Statutoryorganisation |          1        0.01       98.86
+                      StrokeUnitcharity |          1        0.01       98.88
+               Support/listeningservice |          1        0.01       98.89
+                           SupportGroup |          1        0.01       98.90
+               SupportGroupofVolunteers |          1        0.01       98.91
+                      SupportingOrphans |          1        0.01       98.93
+                 TeachingThinkingSkills |          1        0.01       98.94
+TheCongregationofthePassionisaCatholi.. |          1        0.01       98.95
+                     TheRedCrossAct1938 |          1        0.01       98.97
+               TheadvancementofReligion |          1        0.01       98.98
+            ThirdLevelEducationProvider |          1        0.01       98.99
+                              TidyTowns |          1        0.01       99.00
+                 TraditionalMusicSchool |          1        0.01       99.02
+                TransportCancerPatients |          1        0.01       99.03
+UncorporatedentitysubjectoDeedofConst.. |          1        0.01       99.04
+                         Unincorporated |          1        0.01       99.05
+              UnincorporatedAssociation |          4        0.05       99.10
+                     UnincorporatedBody |          4        0.05       99.15
+                  UnincorporatedCharity |          1        0.01       99.17
+                   UnincorporatedEntity |          1        0.01       99.18
+                     Unincorporatedbody |          4        0.05       99.23
+            Unincorporatedbodyofpersons |          2        0.03       99.26
+                  Unincorporatedcharity |          1        0.01       99.27
+                   Unincorporatedentity |          1        0.01       99.28
+                    UniversitiesAct1997 |          1        0.01       99.29
+                             University |          2        0.03       99.32
+                                Unknown |          1        0.01       99.33
+                              Voluntary |          3        0.04       99.37
+                      VoluntaryCommitte |          1        0.01       99.38
+                     VoluntaryCommittee |          1        0.01       99.39
+                 VoluntaryContributions |          1        0.01       99.41
+                 VoluntaryHeritageGroup |          1        0.01       99.42
+                  VoluntaryOrganisation |          2        0.03       99.44
+VoluntaryOrganisationofferingaone-sto.. |          1        0.01       99.46
+               Voluntaryandnotforprofit |          1        0.01       99.47
+                 Voluntaryinshorerescue |          1        0.01       99.48
+               VoluntaryserviceforBlind |          1        0.01       99.50
+                     Voluntaryyouthband |          1        0.01       99.51
+                  Volunteerorganisation |          1        0.01       99.52
+Weareunincorporatedrunwithasteerincom.. |          1        0.01       99.53
+WorshipCentreandShelteredHousingforEl.. |          1        0.01       99.55
+                    Youth&FamilyProject |          1        0.01       99.56
+                     Youth&Homelesswork |          1        0.01       99.57
+                              YouthClub |          1        0.01       99.58
+                 acommitteeofvolunteers |          1        0.01       99.60
+                            association |          1        0.01       99.61
+                 charitableorganisation |          1        0.01       99.62
+            charitableregisteredcompany |          1        0.01       99.63
+                                 church |          3        0.04       99.67
+                         communitygroup |          1        0.01       99.68
+              companylimitedbyGuarantee |          1        0.01       99.70
+  conservationofmedievalchurch&cemetery |          1        0.01       99.71
+              electedvolunteercommittee |          1        0.01       99.72
+                 fundraisingassociation |          1        0.01       99.73
+                           incorporated |          1        0.01       99.75
+                       nonprofitcharity |          1        0.01       99.76
+                       parentscommittee |          1        0.01       99.77
+              peopleaffectedbyhomicide. |          1        0.01       99.79
+                          primaryschool |          1        0.01       99.80
+                  promotePipe&DrumMusic |          1        0.01       99.81
+                              religious |          3        0.04       99.85
+                         religiousgroup |          1        0.01       99.86
+                  serviceforolderpeople |          1        0.01       99.87
+                          statutorybody |          1        0.01       99.89
+                 supportforspecialneeds |          1        0.01       99.90
+                 supportforwomenwithpnd |          1        0.01       99.91
+               unincorp.notforprofitorg |          1        0.01       99.92
+                  unincorporatedcharity |          1        0.01       99.94
+                              voluntary |          1        0.01       99.95
+                  voluntaryorganisation |          2        0.03       99.97
+                 voluntarysocialservice |          1        0.01       99.99
+                         voluntarytrust |          1        0.01      100.00
+----------------------------------------+-----------------------------------
+                                  Total |      7,924      100.00
+
+-> tabulation of subsectorname  
+
+                         Subsector Name |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+                      Addiction Support |         56        0.72        0.72
+         Adult and continuing education |         79        1.01        1.72
+                               Advocacy |         85        1.09        2.81
+                     Agricultural fairs |         16        0.20        3.01
+                         Animal welfare |        111        1.42        4.43
+                                   Arts |        296        3.78        8.21
+                 Civil and human rights |         76        0.97        9.18
+                     Diocesan, parishes |        124        1.58       10.77
+                      Education support |        259        3.31       14.08
+              Emergency relief services |         47        0.60       14.68
+              Environmental enhancement |         35        0.45       15.13
+           Environmental sustainability |         24        0.31       15.43
+                Family support services |        218        2.78       18.22
+                           Fund-raising |        416        5.31       23.53
+                    Group water schemes |         18        0.23       23.76
+   Health services and health promotion |        223        2.85       26.61
+       Heritage and visitor attractions |        126        1.61       28.22
+                  Homelessness services |         57        0.73       28.95
+                               Hospices |         20        0.26       29.20
+                              Hospitals |         33        0.42       29.62
+              International affiliation |         21        0.27       29.89
+              International development |        207        2.64       32.54
+                           Job creation |        118        1.51       34.04
+                         Legal services |         56        0.72       34.76
+                      Local development |      1,037       13.25       48.01
+                            Media, Film |         22        0.28       48.29
+                 Mental health services |        101        1.29       49.58
+                  Museums and libraries |         40        0.51       50.09
+                           Philanthropy |        239        3.05       53.14
+                      Places of worship |        264        3.37       56.52
+                  Pre-Primary education |         77        0.98       57.50
+                   Pre-school childcare |        500        6.39       63.89
+                      Primary education |        400        5.11       69.00
+Professional or sector representative.. |        318        4.06       73.06
+          Recreational clubs, societies |        100        1.28       74.34
+                 Religious associations |        610        7.79       82.13
+                               Research |         87        1.11       83.24
+               Residential care centres |         54        0.69       83.93
+     Residential mental health services |          5        0.06       83.99
+                    Secondary education |        193        2.47       86.46
+Services for Travellers and ethnic mi.. |         48        0.61       87.07
+              Services for older people |        198        2.53       89.60
+  Services for people with disabilities |        183        2.34       91.94
+                      Sheltered housing |         31        0.40       92.34
+                      Social enterprise |         22        0.28       92.62
+                         Social housing |        287        3.67       96.28
+                   Sports organisations |         33        0.42       96.70
+                  Third-level education |         57        0.73       97.43
+     Vocational and technical education |         28        0.36       97.79
+                            Voluntarism |         19        0.24       98.03
+                         Youth services |        154        1.97      100.00
+----------------------------------------+-----------------------------------
+                                  Total |      7,828      100.00
+
+.         mrtab croreg chyreg ahbreg desreg rfsreg, by(charitystatus) column
+
++-------------------------+
+| Key                     |
+|-------------------------|
+| frequency of responses  |
+| column percent of cases |
++-------------------------+
+
+            |         Status         
+            | Registered  De-registe |      Total
+------------+------------------------+-----------
+     croreg |       4342          47 |       4389 
+            |      58.13       15.67 |      56.49 
+------------+------------------------+-----------
+     chyreg |       7144         275 |       7419 
+            |      95.65       91.67 |      95.49 
+------------+------------------------+-----------
+     ahbreg |        445           5 |        450 
+            |       5.96        1.67 |       5.79 
+------------+------------------------+-----------
+     desreg |        339           0 |        339 
+            |       4.54        0.00 |       4.36 
+------------+------------------------+-----------
+     rfsreg |         17           2 |         19 
+            |       0.23        0.67 |       0.24 
+------------+------------------------+-----------
+      Total |      12287         329 |      12616 
+            |     164.51      109.67 |     162.39 
+      Cases |       7469         300 |       7769 
+
+Valid cases:       7769
+Missing cases:     2145
+
+.         
+.         // Summary stats - maybe collapse dataset to one observation?
+.         
+.         count
+  9,914
+
+.                 gen regchar_total = r(N)
+
+.         count if charitystatus==1
+  8,845
+
+.                 gen charactive_total = r(N)     
+
+.         count if benemerge==3
+  7,828
+
+.                 gen benechar_total = r(N)
+
+.         **count if taxgifts==1
+.                 **gen tax_total = r(N)
+.         count if governancecode==1
+  257
+
+.                 gen gov_total = r(N)
+
+.         count if ictr==1
+  341
+
+.                 gen ictr_total = r(N)
+
+.                 
+.         
+.         // Geographical distribution of charities
+.                 
+.         preserve
+
+.         
+.                 gen freq=1
+
+.                 collapse (count)freq, by(county)
+
+.                 desc, f
+
+Contains data
+  obs:            31                          
+ vars:             2                          
+ size:           403                          
+--------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+--------------------------------------------------------------------------------
+county          str9    %9s                   County
+freq            long    %9.0g                 (count) freq
+--------------------------------------------------------------------------------
+Sorted by: county
+     Note: Dataset has changed since last saved.
+
+.                 count
+  31
+
+.                 list
+
+     +------------------+
+     |    county   freq |
+     |------------------|
+  1. |             2139 |
+  2. |    ANTRIM      6 |
+  3. |    ARMAGH      3 |
+  4. |    CARLOW     93 |
+  5. |     CAVAN    146 |
+     |------------------|
+  6. |     CLARE    196 |
+  7. |      CORK    772 |
+  8. |     DERRY      3 |
+  9. |   DONEGAL    323 |
+ 10. |    DUBLIN   2608 |
+     |------------------|
+ 11. | FERMANAGH      2 |
+ 12. |    GALWAY    411 |
+ 13. |     KERRY    250 |
+ 14. |   KILDARE    230 |
+ 15. |  KILKENNY    142 |
+     |------------------|
+ 16. |     LAOIS     75 |
+ 17. |   LEITRIM     76 |
+ 18. |  LIMERICK    297 |
+ 19. |  LONGFORD     78 |
+ 20. |     LOUTH    179 |
+     |------------------|
+ 21. |      MAYO    256 |
+ 22. |     MEATH    158 |
+ 23. |  MONAGHAN    133 |
+ 24. |    OFFALY    108 |
+ 25. | ROSCOMMON    117 |
+     |------------------|
+ 26. |     SLIGO    145 |
+ 27. | TIPPERARY    251 |
+ 28. | WATERFORD    186 |
+ 29. | WESTMEATH    128 |
+ 30. |   WEXFORD    200 |
+     |------------------|
+ 31. |   WICKLOW    203 |
+     +------------------+
+
+.                 sum freq, detail
+
+                        (count) freq
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            2              2
+ 5%            3              3
+10%            6              3       Obs                  31
+25%           93              6       Sum of Wgt.          31
+
+50%          158                      Mean           319.8065
+                        Largest       Std. Dev.       570.589
+75%          251            411
+90%          411            772       Variance       325571.8
+95%         2139           2139       Skewness       3.255666
+99%         2608           2608       Kurtosis       12.50202
+
+.                 table county if county!="" , c(sum freq)                      
+>   
+
+----------------------
+   County |  sum(freq)
+----------+-----------
+   ANTRIM |          6
+   ARMAGH |          3
+   CARLOW |         93
+    CAVAN |        146
+    CLARE |        196
+     CORK |        772
+    DERRY |          3
+  DONEGAL |        323
+   DUBLIN |       2608
+FERMANAGH |          2
+   GALWAY |        411
+    KERRY |        250
+  KILDARE |        230
+ KILKENNY |        142
+    LAOIS |         75
+  LEITRIM |         76
+ LIMERICK |        297
+ LONGFORD |         78
+    LOUTH |        179
+     MAYO |        256
+    MEATH |        158
+ MONAGHAN |        133
+   OFFALY |        108
+ROSCOMMON |        117
+    SLIGO |        145
+TIPPERARY |        251
+WATERFORD |        186
+WESTMEATH |        128
+  WEXFORD |        200
+  WICKLOW |        203
+----------------------
+
+.                 
+.                 drop if county==""
+(1 observation deleted)
+
+.                 
+.                 graph hbar freq, over(county, sort(freq) descending label(labs
+> ize(vsmall))) ///
+>                         legend(off)  ///
+>                         ytitle("No. of Charities") ///
+>                         title("Geographical Distribution of Charities", span) 
+>  ///
+>                         subtitle("By counties of the Rep. of Ireland", span)  
+> ///
+>                         note("Source: CR, Benefacts CR. Produced: $S_DATE") //
+> /
+>                         blabel(bar, position(outside) format(%9.0f) color(blac
+> k) size(tiny)) ///
+>                         scheme(s1mono) ysize(5) ylabel(, nogrid labsize(small)
+> ) name(geod, replace)
+
+.                 /*
+>                         Fix overspilling of blabel with graph area.
+>                 */
+.                 
+.                 graph save $figures\repire_geogdistribution_$ddate.gph, replac
+> e
+(note: file C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\figures\r
+> epire_geogdistribution_20180326.gph not found)
+(file C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\figures\repire_
+> geogdistribution_20180326.gph saved)
+
+.                 graph export $figures\repire_geogdistribution_$ddate.png, repl
+> ace width(4096)
+(note: file C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\figures\\
+> repire_geogdistribution_20180326.png not found)
+(file C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\figures\\repire
+> _geogdistribution_20180326.png written in PNG format)
+
+.                                 
+.         restore
+
+.         
+.         preserve
+
+.                 
+.                 // Sectoral distribution of charities
+.                 
+.                 gen freq=1
+
+.                 collapse (count)freq, by(sector)
+
+.                 desc, f
+
+Contains data
+  obs:            13                          
+ vars:             2                          
+ size:            65                          
+--------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+--------------------------------------------------------------------------------
+sector          byte    %25.0g     sector_label
+                                              Classification of charity i.e.
+                                                sector it operates in
+freq            long    %9.0g                 (count) freq
+--------------------------------------------------------------------------------
+Sorted by: sector
+     Note: Dataset has changed since last saved.
+
+.                 count
+  13
+
+.                 list
+
+     +----------------------------------+
+     |                    sector   freq |
+     |----------------------------------|
+  1. |      Arts, culture, media    484 |
+  2. |        Recreation, sports    149 |
+  3. |       Education, research   1180 |
+  4. |                    Health    492 |
+  5. |           Social services   1405 |
+     |----------------------------------|
+  6. |      Development, housing   1495 |
+  7. |               Environment    188 |
+  8. |   Advocacy, law, politics    217 |
+  9. | Philanthropy, voluntarism    674 |
+ 10. |             International    228 |
+     |----------------------------------|
+ 11. |                  Religion    998 |
+ 12. |  Professional, vocational    318 |
+ 13. |                         .   2086 |
+     +----------------------------------+
+
+.                 sum freq, detail
+
+                        (count) freq
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%          149            149
+ 5%          149            188
+10%          188            217       Obs                  13
+25%          228            228       Sum of Wgt.          13
+
+50%          492                      Mean           762.6154
+                        Largest       Std. Dev.      617.5637
+75%         1180           1180
+90%         1495           1405       Variance       381384.9
+95%         2086           1495       Skewness       .8084614
+99%         2086           2086       Kurtosis       2.501425
+
+.                 table sector if sector!=. , c(sum freq)                 
+
+--------------------------------------
+Classification of charity |
+i.e. sector it operates   |
+in                        |  sum(freq)
+--------------------------+-----------
+     Arts, culture, media |        484
+       Recreation, sports |        149
+      Education, research |       1180
+                   Health |        492
+          Social services |       1405
+     Development, housing |       1495
+              Environment |        188
+  Advocacy, law, politics |        217
+Philanthropy, voluntarism |        674
+            International |        228
+                 Religion |        998
+ Professional, vocational |        318
+--------------------------------------
+
+.                 
+.                 drop if sector==.
+(1 observation deleted)
+
+.                 
+.                 graph hbar freq, over(sector, sort(freq) descending label(labs
+> ize(vsmall))) ///
+>                         legend(off)  ///
+>                         ytitle("No. of Charities") ///
+>                         title("Sectoral Distribution of Charities", span)  ///
+>                         subtitle("By Benefacts charity classification", span) 
+>  ///
+>                         note("Source: Charities Regulator, Benefacts. Produced
+> : $S_DATE") ///
+>                         blabel(bar, position(outside) format(%9.0f) color(blac
+> k) size(tiny)) ///
+>                         scheme(s1mono) ysize(5) ylabel(, nogrid labsize(small)
+> ) name(sect, replace)
+
+.                 /*
+>                         Fix overspilling of blabel with graph area.
+>                 */
+.                         
+.                 graph save $figures\repire_sectdistribution_$ddate.gph, replac
+> e
+(note: file C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\figures\r
+> epire_sectdistribution_20180326.gph not found)
+(file C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\figures\repire_
+> sectdistribution_20180326.gph saved)
+
+.                 graph export $figures\repire_sectdistribution_$ddate.png, repl
+> ace width(4096)
+(note: file C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\figures\\
+> repire_sectdistribution_20180326.png not found)
+(file C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\figures\\repire
+> _sectdistribution_20180326.png written in PNG format)
+
+.                                 
+.         restore
+
+.         
+.         
+.         // Size distribution of charities
+.                 
+.         preserve
+
+.                                 
+.                 gen freq=1
+
+.                 collapse (count)freq, by(charitysize)
+
+.                 desc, f
+
+Contains data
+  obs:             4                          
+ vars:             2                          
+ size:            20                          
+--------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+--------------------------------------------------------------------------------
+charitysize     byte    %8.0g      charitysize_lab
+                                              Report Size
+freq            long    %9.0g                 (count) freq
+--------------------------------------------------------------------------------
+Sorted by: charitysize
+     Note: Dataset has changed since last saved.
+
+.                 count
+  4
+
+.                 list
+
+     +-----------------+
+     | charit~e   freq |
+     |-----------------|
+  1. |    Large   3022 |
+  2. |   Medium   1776 |
+  3. |    Small    777 |
+  4. |        .   4339 |
+     +-----------------+
+
+.                 sum freq, detail
+
+                        (count) freq
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%          777            777
+ 5%          777           1776
+10%          777           3022       Obs                   4
+25%       1276.5           4339       Sum of Wgt.           4
+
+50%         2399                      Mean             2478.5
+                        Largest       Std. Dev.      1543.315
+75%       3680.5            777
+90%         4339           1776       Variance        2381820
+95%         4339           3022       Skewness        .139042
+99%         4339           4339       Kurtosis       1.621237
+
+.                 table charitysize if charitysize!=. , c(sum freq)             
+>           
+
+----------------------
+Report    |
+Size      |  sum(freq)
+----------+-----------
+    Large |       3022
+   Medium |       1776
+    Small |        777
+----------------------
+
+.                 
+.                 drop if charitysize==.
+(1 observation deleted)
+
+.                 
+.                 graph hbar freq, over(charitysize, sort(freq) descending label
+> (labsize(vsmall))) ///
+>                         legend(off)  ///
+>                         ytitle("No. of Charities") ///
+>                         title("Size Distribution of Charities", span)  ///
+>                         subtitle("By latest gross income", span)  ///
+>                         note("Source: Charities Regulator. Produced: $S_DATE")
+>  ///
+>                         blabel(bar, position(outside) format(%9.0f) color(blac
+> k) size(tiny)) ///
+>                         scheme(s1mono) ysize(5) ylabel(, nogrid labsize(small)
+> ) name(size, replace)
+
+.                 /*
+>                         Fix overspilling of blabel with graph area.
+>                 */
+.                         
+.                 graph save $figures\repire_sizedistribution_$ddate.gph, replac
+> e
+(note: file C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\figures\r
+> epire_sizedistribution_20180326.gph not found)
+(file C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\figures\repire_
+> sizedistribution_20180326.gph saved)
+
+.                 graph export $figures\repire_sizedistribution_$ddate.png, repl
+> ace width(4096)
+(note: file C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\figures\\
+> repire_sizedistribution_20180326.png not found)
+(file C:\Users\mcdonndz-local\Desktop\github\repire_charity_data\figures\\repire
+> _sizedistribution_20180326.png written in PNG format)
+
+.                                 
+.         restore
+
+. 
+. 
+. // Annual Returns
+. /*
+> use $cleandata\$ddate\annualreturns_$ddate.dta, clear   
+> desc, f
+> count
+> return list
+> di r(N) " annual returns on $ddate"     
+>         
+>         // Summary statistics
+>         
+>         tab charitysize volunteers if volunteers < 7, nofreq col all
+>         
+>         xtsum inc
+>         xtsum exp
+>         xtsum lninc
+>         xtsum lnexp
+>         sum inc exp lninc lnexp, detail
+>         
+>         twoway(scatter inc exp if inc<500000 & exp<500000) (lfitci inc exp if 
+> inc<500000 & exp<500000)  , ///
+>                 title("Relationship between income and expenditure") ///
+>                 subtitle("Line of best fit and 95% CI") ///
+>                 scheme(s1color)
+>                 
+>         graph save $figures\repire_incexp_$ddate.gph, replace
+>         graph export $figures\repire_incexp_$ddate.png, replace width(4096)
+> */      
+.         
+. exit, STATA clear
+
+end of do-file

@@ -28,7 +28,7 @@ try:
 except:
 	print('Folder already exists')
 
-
+'''
 # Run python scripts in order: #
 
 import repire_charityregister
@@ -57,7 +57,7 @@ print('                                                  ')
 print('                                                  ')
 print('                                                  ')
 print('                                                  ')
-
+'''
 
 # Run Stata syntax #
 
