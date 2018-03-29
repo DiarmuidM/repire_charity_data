@@ -55,6 +55,7 @@ desc, f
 count
 return list
 di r(N) " registered charities on $ddate"
+set scheme s1mono
 	
 	// Non-financial characteristics
 		
@@ -97,8 +98,8 @@ di r(N) " registered charities on $ddate"
 			title("Geographical Distribution of Charities", span)  ///
 			subtitle("By counties of the Rep. of Ireland", span)  ///
 			note("Source: CR, Benefacts CR. Produced: $S_DATE") ///
-			blabel(bar, position(outside) format(%9.0f) color(black) size(tiny)) ///
-			scheme(s1mono) ysize(5) ylabel(, nogrid labsize(small)) name(geod, replace)
+			blabel(bar, position(outside) format(%9.0f) color(black) size(vsmall)) ///
+			ysize(5) ylabel(0(400)2800, nogrid labsize(small)) name(geod, replace)
 		/*
 			Fix overspilling of blabel with graph area.
 			
@@ -130,8 +131,8 @@ di r(N) " registered charities on $ddate"
 			title("Sectoral Distribution of Charities", span)  ///
 			subtitle("By Benefacts charity classification", span)  ///
 			note("Source: Charities Regulator, Benefacts. Produced: $S_DATE") ///
-			blabel(bar, position(outside) format(%9.0f) color(black) size(tiny)) ///
-			scheme(s1mono) ysize(5) ylabel(, nogrid labsize(small)) name(sect, replace)
+			blabel(bar, position(outside) format(%9.0f) color(black) size(vsmall)) ///
+			ysize(5) ylabel(0(300)1800, nogrid labsize(small)) name(sect, replace)
 		/*
 			Fix overspilling of blabel with graph area.
 			
@@ -164,8 +165,8 @@ di r(N) " registered charities on $ddate"
 			title("Size Distribution of Charities", span)  ///
 			subtitle("By latest gross income", span)  ///
 			note("Source: Charities Regulator. Produced: $S_DATE") ///
-			blabel(bar, position(outside) format(%9.0f) color(black) size(tiny)) ///
-			scheme(s1mono) ysize(5) ylabel(, nogrid labsize(small)) name(size, replace)
+			blabel(bar, position(outside) format(%9.0f) color(black) size(vsmall)) ///
+			ysize(5) ylabel(0(600)3600, nogrid labsize(small)) name(size, replace)
 		/*
 			Fix overspilling of blabel with graph area.
 			
@@ -177,18 +178,54 @@ di r(N) " registered charities on $ddate"
 				
 	restore
 	
-	// Financial statistics
+	// Regulator statistics
+	/*
+		Does the Irish Revenue have an API I could access?
+	*/
 	
 	
 
 
 // Annual Returns
-/*
+
 use $cleandata\$ddate\annualreturns_$ddate.dta, clear	
 desc, f
 count
 return list
 di r(N) " annual returns on $ddate"	
+
+	// Number of annual returns per charity
+		
+	preserve
+				
+		gen freq=1
+		collapse (count)freq, by(numreturns)
+		desc, f
+		count
+		list
+		sum freq, detail
+		table numreturns if numreturns!=. , c(sum freq)			
+		
+		drop if numreturns==.
+		
+		graph hbar freq, over(numreturns, sort(freq) descending label(labsize(vsmall))) ///
+			legend(off)  ///
+			ytitle("No. of Charities") ///
+			title("Annual Returns Submitted", span)  ///
+			subtitle("Per charity", span)  ///
+			note("Source: Charities Regulator. Produced: $S_DATE") ///
+			blabel(bar, position(outside) format(%9.0f) color(black) size(vsmall)) ///
+			ysize(5) ylabel(0(600)3600, nogrid labsize(small)) name(size, replace)
+		/*
+			Fix overspilling of blabel with graph area.
+			
+			How do I include sample size in note?
+		*/
+			
+		graph save $figures\repire_numannreturns_$ddate.gph, replace
+		graph export $figures\repire_numannreturns_$ddate.png, replace width(4096)
+				
+	restore
 	
 	// Summary statistics
 	
@@ -199,14 +236,5 @@ di r(N) " annual returns on $ddate"
 	xtsum lninc
 	xtsum lnexp
 	sum inc exp lninc lnexp, detail
-	
-	twoway(scatter inc exp if inc<500000 & exp<500000) (lfitci inc exp if inc<500000 & exp<500000)  , ///
-		title("Relationship between income and expenditure") ///
-		subtitle("Line of best fit and 95% CI") ///
-		scheme(s1color)
-		
-	graph save $figures\repire_incexp_$ddate.gph, replace
-	graph export $figures\repire_incexp_$ddate.png, replace width(4096)
-*/	
 	
 exit, STATA clear

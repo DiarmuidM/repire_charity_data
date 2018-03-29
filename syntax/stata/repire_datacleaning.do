@@ -220,6 +220,7 @@ codebook *, problems
 	// Duplicate records
 
 	duplicates report
+	duplicates report RegisteredCharityNumber
 		
 	
 	// Leading, trailing and embedded blanks
@@ -325,6 +326,13 @@ codebook *, problems
 	xtset charityid edate
 	xtdes // What do I do about edates that fall within the same year for a given charity?
 	
+		
+	// Create a variable to capture the number of returns per charity
+	
+	bysort charityid: gen numreturns=[_N]
+	xttab numreturns
+	list charityid numreturns in 1/100
+	
 	
 	/* Create a dataset for merging with the Register */
 	
@@ -333,8 +341,9 @@ codebook *, problems
 		sort charityid
 		keep if latest_yr==1
 		count
-		keep charityid charitysize inc exp volunteers returnyear
+		keep charityid charitysize inc exp volunteers returnyear numreturns
 		
+		duplicates report charityid returnyear
 		duplicates tag charityid, gen(dupcharid)
 		duplicates drop charityid, force
 		/*
@@ -353,6 +362,7 @@ label variable eyear "Report end year"
 label variable returnyear "Year financial accounts refer to - FYE"
 label variable latest_yr "Most recent `returnyear` - dummy var"
 label variable max_yr "Most recent `returnyear`"
+label variable numreturns "Number of annual returns per charity"
 
 save $cleandata\$ddate\annualreturns_$ddate.dta, replace
 

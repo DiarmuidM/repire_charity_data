@@ -23,7 +23,7 @@ workdata = 'C:/Users/mcdonndz-local/Desktop/data/repire_charity_data/data_workin
 
 # Create folders to store the clean and working .dta files
 try:
-	os.mkdir(cleandata+ddate)
+	os.mkdir(cleandata)
 	os.mkdir(workdata+ddate)
 except:
 	print('Folder already exists')
