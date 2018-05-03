@@ -706,6 +706,11 @@ foreach volcode in `volcodes' {
 	tab _merge
 	keep if _merge!=2
 	rename _merge benemerge
+	notes: Some registered charities fall outside the definition of nonprofit Benefacts uses to compile its Database of Irish Nonprofits.
+	/*
+		There is not perfect overlap between the CRA and Benefacts registers for the following reason: 
+		Some registered charities fall outside the definition of nonprofit Benefacts uses to compile its Database of Irish Nonprofits
+	*/
 	
 	
 	// Merge annual returns with Charity Register

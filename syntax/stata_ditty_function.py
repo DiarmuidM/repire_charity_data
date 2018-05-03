@@ -25,3 +25,5 @@ def stata_ditty():
 	print('                                  ')
 	print('----------------------------------')
 	sleep(2)
+
+stata_ditty()
