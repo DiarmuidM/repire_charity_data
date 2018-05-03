@@ -5,11 +5,13 @@ This repository contains Python and Stata syntax to collect, clean and analyse R
 
 ## Background
 
-Data relating to the Republic of Ireland charity sector is being made increasingly available by two key actors:
+Data relating to the Republic of Ireland charity sector is being made increasingly available by two key bodies:
 * [Charities Regulator (An Rialalai Carthanas)](http://www.charitiesregulatoryauthority.ie/)
 * [Benefacts](https://benefacts.ie/)
 
-These organisations produce open datasets containing detailed information about the characteristics, financial profile, geographical distribution, and activities of charities based in the Republic of Ireland. These datasets have been underemployed in scholarship and research, one of the main reasons for which is the need for intermediate programming and data analysis skills in order to work with the data. The repository addresses this barrier by providing Python and Stata scripts that undertake the collecting, cleaning and analysis of the datasets.
+These organisations produce open datasets containing detailed information about the characteristics, financial profile, geographical distribution, and activities of charities based in the Republic of Ireland. Potential users are encouraged to consult the extensive data documentation produced by these organisations, in particular Benefacts' _About the data_ section in their [2018 State of the Sector report](https://analysis2018.benefacts.ie/report/about-the-data).
+
+These datasets have been underemployed in scholarship and research, one of the main reasons for which is the need for intermediate programming and data analysis skills in order to work with the data. The repository addresses this barrier by providing Python and Stata scripts that undertake the collecting, cleaning and analysis of the datasets.
 
 ## Repository
 
