@@ -11,7 +11,7 @@ Data relating to the Republic of Ireland charity sector is being made increasing
 
 These organisations produce open datasets containing detailed information about the characteristics, financial profile, geographical distribution, and activities of charities based in the Republic of Ireland. Potential users are encouraged to consult the extensive data documentation produced by these organisations, in particular the [regulator's detailed FAQ](http://www.charitiesregulator.ie/en/cra/pages/faqs) and Benefacts' _About the data_ section in their [2018 State of the Sector report](https://analysis2018.benefacts.ie/report/about-the-data).
 
-These datasets have been underemployed in scholarship and research, one of the main reasons for which is the need for intermediate programming and data analysis skills in order to work with the data. The repository addresses this barrier by providing Python and Stata scripts that undertake the collecting, cleaning and analysis of the datasets.
+These datasets have been underemployed in scholarship and research, one of the main reasons for which is the need for intermediate programming and data analysis skills in order to work with the data. The repository addresses this barrier by providing Python and Stata scripts that undertake the collection, cleaning and analysis of the datasets.
 
 ## Repository
 
