@@ -4,12 +4,8 @@ from time import sleep
 import os
 import os.path
 from downloaddate_function import downloaddate
-from stata_ditty_function import stata_ditty
+#from stata_ditty_function import stata_ditty
 import subprocess
-
-# Launch a little ditty
-print('                       ')
-stata_ditty()
 
 
 # Get today's date
@@ -24,13 +20,13 @@ workdata = 'C:/Users/mcdonndz-local/Desktop/data/repire_charity_data/data_workin
 # Create folders to store the clean and working .dta files
 try:
 	os.mkdir(cleandata)
-	os.mkdir(workdata+ddate)
+	os.mkdir(workdata)
 except:
 	print('Folder already exists')
 
-'''
-# Run python scripts in order: #
 
+# Run python scripts in order: #
+'''
 import repire_charityregister
 print('Finished executing repire_charityregister.py')
 print('                                             ')
@@ -58,7 +54,6 @@ print('                                                  ')
 print('                                                  ')
 print('                                                  ')
 '''
-
 # Run Stata syntax #
 
 # Define a function for executing do files
@@ -77,7 +72,7 @@ try:
 	print('-------------------------------------------------------------------------------------------------------------')
 	print('                                                                                                             ')
 	print('                                                                                                             ')
-	print('Stata do files run successfully: go see the log files at C:/Users/mcdonndz-local/Desktop/github/benefacts_nonprofit_data_ireland/logs/')
+	print('Stata do files run successfully: go see the log files at C:/Users/mcdonndz-local/Desktop/github/repire_charity_data/logs/')
 	print('                                                                                                             ')
 	print('                                                                                                             ')
 except:
